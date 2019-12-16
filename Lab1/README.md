@@ -1,4 +1,4 @@
-# OpenShift4 Basic Lab1
+# OpenShift4 Ops Lab1
 OpenShift4クラスターのインストール手順や，クラスターの動作確認，クラスター上でのコンテナイメージのビルドやデプロイなどの基礎を学びます。
 
 ## 概要
@@ -14,7 +14,7 @@ OpenShift4クラスターをAWS上に構築し，OpenShift4コンソールやコ
 作業は以下の手順どおりに進めます。
 
 1. [OpenShift4クラスターの構築](1_ocp4-install.md) ※**本日は行いません。**
-2. [OpenShift4クラスターへのログインと動作確認](2_ocp4-tour.md)
+2. [OpenShift4クラスターへのログインと動作確認](2_ocp4-tour.md) ※**オプション**
 3. [コンテナイメージのビルドとデプロイ](3_ocp4-build-deploy.md)
 
 ## References

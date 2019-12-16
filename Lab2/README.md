@@ -1,4 +1,4 @@
-# OpenShift4 Basic Lab2
+# OpenShift4 Ops Lab2
 コンテナイメージのデプロイと，Jenkinsによるビルドパイプライン動作について学びます。
 
 ## 概要

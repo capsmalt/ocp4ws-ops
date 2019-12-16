@@ -1,15 +1,19 @@
 # ハンズオン概要
-本ハンズオンは，OpenShift4の基礎編です。  
-インフラ向け応用編(Operator他)および開発向け応用編(CodeReady他)のワークショップも不定期開催しています。
+本ハンズオンは，OpenShift4のOps編です。  
 
-OpenShift4基礎編では以下を学びます。
-- OpenShift4クラスターの構築 (本日は実施しません。クラスターは構築済です。)
+以下を学びます。
 - OpenShift4クラスターへのログインと動作確認
 - コンテナイメージのビルドとデプロイ
 - Jenkinsベースのビルドパイプラインの使用
+- Operatorの導入
+- Operatorとアプリケーションの連携
+- Custom Resourceの設定
+- Operatorに対するCLI操作
 
-### Lab1: [OpenShift4クラスター構築，ログインと動作確認，コンテナイメージのビルド&デプロイ](Lab1)
-### Lab2: [Jenkinsベースのビルドパイプラインの使用，その他](Lab2)
+### Lab1: [コンテナイメージのビルド&デプロイ](Lab1)
+### Lab2: [Jenkinsベースのビルドパイプラインの使用](Lab2)
+### Lab3: [アプリケーション と Operator 連携](Lab3)
+### (Option) Lab4: [Operator導入 と CLI活用](Lab4)
 
 # ハンズオン環境
 本ハンズオンは，Kubernetesクラスター(OpenShift4)の動作環境としてAWSを使用します。今回は構築済です。  
