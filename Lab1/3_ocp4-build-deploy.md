@@ -65,7 +65,7 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
     ![](images/ocp4-lab1-3-create-project-result.png)
 
 ### 3-3-2. カタログでソースを指定してビルド&デプロイ
-1. [Catalog] > [Developer Catalog] > [Python] テンプレート を選択します。
+1. [</> Developer] > [+Add] > [From Catalog] > [Python] テンプレート を選択します。
 
     ![](images/ocp4-lab1-3-devcatalog-python.png)
 
@@ -83,36 +83,34 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
     >- Route
     >    - クラスター外にワークロードを公開
 
-1. アプリケーションのリポジトリなどを指定して，OpenShift4上にアプリケーションをデプロイします。
+2. アプリケーションのリポジトリなどを指定して，OpenShift4上にアプリケーションをデプロイします。
 
     最初に，**[Create Application]**　を選択します。  
     ![](images/ocp4-lab1-3-devcatalog-python-create.png)
     
     次に，**[リポジトリなどいくつかの項目]** を指定し，最後に **[Create]** を選択します。  
 
-    - Namespace: `自身のプロジェクト名 (例: blog-user00)`
-    - Version: `python:3.6`
+    - Builder Image Version: `3.6`
+    - Git Repo URL: `https://github.com/openshift-katacoda/blog-django-py` 
+    - Applicaiton:`Create Application(デフォルト)`
+    - Applicaiton Name:`任意の名前(例: blog-user00)`
     - Name:`任意の名前(例: blog-user00)`
-    - Git Repoaitory: `https://github.com/openshift-katacoda/blog-django-py` 
-    - Create route: `デフォルト(チェックを外した状態)`
+    - Create route: `チェックを外す`
 
-    ![](images/ocp4-lab1-3-devcatalog-python-create-repo.png)
+    ![](images/ocp4-lab1-3-devcatalog-python-create-repo1.png)
+    ![](images/ocp4-lab1-3-devcatalog-python-create-repo2.png)
     
     以上の手順で，blogアプリケーションをOpenShift4上にデプロイできました。  
     
     >Tips:
     >
-    >下図のように，デプロイ直後は "0 of 1 pods" のように動作準備中の状態です。  
-    >
-    >![](images/ocp4-lab1-3-blog-pods-status-0of1.png)  
-    >
-    >少し待つと，下図のように "1 of 1 pods" のように正常に動作した状態を確認できます。  
+    >[</> Developer] > [Topology] から、アプリケーションのアイコンをクリックすると、稼働状態を確認できます。
     >
     >![](images/ocp4-lab1-3-blog-pods-status-1of1.png)  
     >
     
 ### 3-3-3. blogアプリケーションの状態を確認
-1. [Workloads] > [Pods] > [指定したアプリ名 (例: blog-user00)] のように選択します。
+1. [</> Developer] > [Topology] -> [アプリケーションのアイコン] から、Pod名のリンクをクリックします。
 
     ![](images/ocp4-lab1-3-blog-pods.png)
 
