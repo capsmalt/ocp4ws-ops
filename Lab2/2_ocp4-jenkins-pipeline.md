@@ -47,7 +47,7 @@ ocコマンドを使用して，クラスターにログインします。
     jenkins-ephemeral: 永続化なし <== 今回はこちらを使用
     jenkins-persistent: 永続化あり
 
-    $ oc new-app jenkins-ephemeral -n jenkins-user00  # -n 作成したプロジェクト名
+    $ oc new-app jenkins-ephemeral
     $ oc get pods
     $ oc project
     ```
@@ -56,7 +56,7 @@ ocコマンドを使用して，クラスターにログインします。
 1. Jenkinsにパイプライン設定(nodejs-sample-pipeline)を入れます。
 
     ```
-    $ oc create -f https://raw.githubusercontent.com/openshift/origin/master/examples/jenkins/pipeline/nodejs-sample-pipeline.yaml -n jenkins-user00
+    $ oc create -f https://raw.githubusercontent.com/openshift/origin/master/examples/jenkins/pipeline/nodejs-sample-pipeline.yaml
     
     $ oc get buildconfigs
     nodejs-sample-pipeline  # oc createで作成されたPipeline
