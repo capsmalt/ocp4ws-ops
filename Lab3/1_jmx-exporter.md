@@ -120,13 +120,13 @@ S2I: pom.xml に Dependency をセットし、S2I 実行時に Maven でビル�
     ```
     $ git clone https://github.com/openlab-red/jboss-eap-prometheus
     $ cd ./jboss-eap-prometheus/
-    $ oc new-build . -n jmx-<User_ID>
+    $ oc new-build .
     --> Found Docker image b72b49b (18 months old) from registry.access.redhat.com for "registry.access.redhat.com/jboss-eap-7/eap70-openshift:latest"
     …
     --> Success
     ```
 
-1. ビルドの状況をocコマンドと、OpenShift4コンソールからも確認します。
+2. ビルドの状況をocコマンドと、OpenShift4コンソールからも確認します。
 
     ```
     $ oc logs -f bc/jboss-eap-prometheus
@@ -134,14 +134,14 @@ S2I: pom.xml に Dependency をセットし、S2I 実行時に Maven でビル�
     Writing manifest to image destination
     Storing signatures
     Push successful
-    ※イメージがPushされると動的にログから開放されるので待つ。
+    ※イメージがPushされると自動的にログから開放されるので待つ。
     (もし「Errorとなってしまった場合は」、[Ctl] + [C]で出て再度やり直す)
 
-    $ oc get build -n jmx-<User_ID>    
+    $ oc get build
     NAME                     TYPE     FROM          STATUS     STARTED          DURATION
     jboss-eap-prometheus-1   Docker   Git@23160b8   Complete   38 minutes ago   1m28s    
     
-    $ oc get imagestream -n jmx-<User_ID>
+    $ oc get imagestream
     NAME                   IMAGE REPOSITORY                                                                   TAGS     UPDATED
     eap70-openshift        image-registry.openshift-image-registry.svc:5000/jmx-<User_ID>/eap70-openshift        latest   37 minutes ago
     jboss-eap-prometheus   image-registry.openshift-image-registry.svc:5000/jmx-<User_ID>/jboss-eap-prometheus   latest   36 minutes ago
@@ -161,7 +161,6 @@ S2I: pom.xml に Dependency をセットし、S2I 実行時に Maven でビル�
     ```
     $ export JBOSS_HOME=/opt/eap
     $ oc new-app -i jboss-eap-prometheus:latest \
-      -n jmx-<User_ID> \
       --name=jboss-eap-prometheus \
       -e PREPEND_JAVA_OPTS="-javaagent:${JBOSS_HOME}/prometheus/jmx-prometheus.jar=9404:${JBOSS_HOME}/prometheus/config.yaml"
 
@@ -175,21 +174,21 @@ S2I: pom.xml に Dependency をセットし、S2I 実行時に Maven でビル�
         Run 'oc status' to view your app.
     ```
 
-1. 展開したアプリケーションの確認
+2. 展開したアプリケーションの確認
 
     この時点で「jboss-eap-prometheus-1」がRunning状態になれば，デプロイ成功です。  
     JMX Exporter はデフォルトで9404ポートを公開します。
 
 ```
-$ oc get svc/jboss-eap-prometheus -n jmx-<User_ID>
+$ oc get svc/jboss-eap-prometheus
 NAME                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                               AGE
 jboss-eap-prometheus   ClusterIP   172.30.159.173   <none>        8080/TCP,8443/TCP,8778/TCP,9404/TCP   30s
 
-$ oc get dc/jboss-eap-prometheus -n jmx-<User_ID>
+$ oc get dc/jboss-eap-prometheus
 NAME                   REVISION   DESIRED   CURRENT   TRIGGERED BY
 jboss-eap-prometheus   1          1         1         config,image(jboss-eap-prometheus:latest)
 
-$ oc get pod -n jmx-<User_ID>
+$ oc get pod
 NAME                           READY   STATUS      RESTARTS   AGE
 jboss-eap-prometheus-1-2z9zs   1/1     Running     0          4m50s
 jboss-eap-prometheus-1-deploy  0/1     Completed   0          4m59s
@@ -203,10 +202,10 @@ jboss-eap-prometheus-1-build   0/1     Completed   0          9m19s
 JMX ExporterのServiceに対して、アノテーションをつけておく。   
 
 ```
-$ oc annotate svc jboss-eap-prometheus prometheus.io/scrape='true' -n jmx-<User_ID>
+$ oc annotate svc jboss-eap-prometheus prometheus.io/scrape='true'
 service/jboss-eap-prometheus annotated
 
-$ oc annotate svc jboss-eap-prometheus prometheus.io/port='9404' -n jmx-<User_ID>
+$ oc annotate svc jboss-eap-prometheus prometheus.io/port='9404'
 service/jboss-eap-prometheus annotated
 ```
 
@@ -215,10 +214,10 @@ service/jboss-eap-prometheus annotated
 「jboss-eap-prometheus」のアプリケーション(tcp-8080)ポートを、ルータに接続。
 
 ```
-$ oc expose svc/jboss-eap-prometheus --name=tcp-8080 --port=8080 -n jmx-<User_ID>
+$ oc expose svc/jboss-eap-prometheus --name=tcp-8080 --port=8080
 route.route.openshift.io/tcp-8080 exposed
 
-$ oc get route tcp-8080 -n jmx-<User_ID>
+$ oc get route tcp-8080
 NAME       HOST/PORT                                PATH   SERVICES               PORT   TERMINATION   WILDCARD
 tcp-8080   tcp-8080-jmx.XXX.openshiftworkshop.com          jboss-eap-prometheus   8080                 None
 ```
@@ -230,10 +229,10 @@ Host/Port (http://tcp-8080-jmx.XXXX.openshiftworkshop.com) をブラウザ上か
 次に「jboss-eap-prometheus」のPromtheus Exporter(tcp-9404)ポートを、ルータに接続。
 
 ```
-$ oc expose svc/jboss-eap-prometheus --name=tcp-9404 --port=9404 -n jmx-<User_ID>
+$ oc expose svc/jboss-eap-prometheus --name=tcp-9404 --port=9404
 route.route.openshift.io/tcp-9404 exposed
 
-$ oc get route tcp-9404 -n jmx-<User_ID>
+$ oc get route tcp-9404
 NAME       HOST/PORT                                PATH   SERVICES               PORT   TERMINATION   WILDCARD
 tcp-9404   tcp-9404-jmx.XXX.openshiftworkshop.com          jboss-eap-prometheus   9404                 None
 ```
