@@ -58,8 +58,7 @@ ocコマンドを使用して，クラスターにログインします。
     ```
     $ oc create -f https://raw.githubusercontent.com/openshift/origin/master/examples/jenkins/pipeline/nodejs-sample-pipeline.yaml
     
-    $ oc get buildconfigs
-    nodejs-sample-pipeline  # oc createで作成されたPipeline
+    $ oc get buildconfigs nodejs-sample-pipeline  # oc createで作成されたPipeline
     
     $ oc get buildconfig/nodejs-sample-pipeline -o yaml　# 中身を確認
 
