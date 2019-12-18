@@ -32,13 +32,13 @@ Using project "jmx-monitor-<User_ID>" on server "https://<OpenShift API>".
 ```
 
 ### 2-2-2. Subscriptionを作成  
-ブラウザからOpenShift Portalにログインし、[Catalog]>[Operator Hub]からPrometheusを検索する。   
+ブラウザからOpenShift Portalにログインし、[Operators]>[OperatorHub]からPrometheusを検索する。   
 この際、プロジェクトが「jmx-monitor-<User_ID>」であることを確認しておく。   
           
-![OperatorHub](images/operator-hub.jpg "operator-hub")
+![OperatorHub](images/operator-hub.png "operator-hub")
 
 OperatorHubの中から、Prometheus Operator(Community)を選択して、[Install]を行う。        
-※コミュニティ版を利用すると、警告が表示されるので、一旦[Continue]で続ける。(OCP 4.1現在)    
+※コミュニティ版を利用すると、警告が表示されるので、一旦[Continue]で続ける。(OCP 4.2現在)    
      
 ![Prometheus Operator](images/prometheus-operator.jpg "prometheus-operator")
 
@@ -59,11 +59,11 @@ Automatic
 
 実際にGUI上では以下のように設定します。
    
-<img src="images/create-subscription.jpg" width="900x900">
+<img src="images/create-subscription.png" width="900x900">
 
-正しくSubscriptionが設定されると、[UPGRADE STATUS]がInstalledになりOperatorが展開されます。また、以下のように[Catalog]>[Operator Management]から、Subscriptionの概要が確認できます。
+正しくSubscriptionが設定されると、[UPGRADE STATUS]がInstalledになりOperatorが展開されます。また、以下のように[Operators]>[Installed Operators]>[Operator Details]>[Subscription]から、Subscriptionの概要が確認できます。
 
-![Prometheus Subscription](images/prometheus-subscription.jpg "prometheus-subscription")
+![Prometheus Subscription](images/prometheus-subscription.png "prometheus-subscription")
 
 これで、Prometheus OperatorのSubscriptionが作成されました。なおこの時点では、CRDの登録やPrometheus Operatorの配置が行われるだけで、Prometheusのプロセス自体は構築されません。
 
@@ -72,22 +72,23 @@ Automatic
 Prometheus OperatorのSubscriptionを作成すると、CRD(Custom Resource Definition)が作成される。
 
 ```
-$ oc get crd -n jmx-monitor-<User_ID> |grep monitoring.coreos.com
-alertmanagers.monitoring.coreos.com                         2019-08-01T05:51:14Z
-prometheuses.monitoring.coreos.com                          2019-08-01T05:51:14Z
-prometheusrules.monitoring.coreos.com                       2019-08-01T05:51:14Z
-servicemonitors.monitoring.coreos.com                       2019-08-01T05:51:14Z
+$ oc get crd |grep monitoring.coreos.com
+alertmanagers.monitoring.coreos.com                         2019-12-17T20:27:02Z
+podmonitors.monitoring.coreos.com                           2019-12-17T20:27:02Z
+prometheuses.monitoring.coreos.com                          2019-12-17T20:27:02Z
+prometheusrules.monitoring.coreos.com                       2019-12-17T20:27:03Z
+servicemonitors.monitoring.coreos.com                       2019-12-17T20:27:02Z
 ```
 
-Promethus Operatorは、標準で４つのCRDを保持している。  
-GUIからは[Catalog]>[Installed Operators]>[Prometheus Operator] を確認。オペレーターカタログとして、デプロイされたPromethus OperatorのCRDが確認できる。
+Promethus Operatorは、標準で5つのCRDを保持している。  
+GUIからは [Operators]>[Installed Operators]>[Prometheus Operator] を確認。オペレーターカタログとして、デプロイされたPromethus OperatorのCRDが確認できる。
 
-![Prometheus Catalog](images/prometheus-catalog.jpg "prometheus-catalog")
+![Prometheus Catalog](images/prometheus-catalog.png "prometheus-catalog")
 
 また、Prometheus OperatorがOLMによって配置される。
 
 ```
-$ oc get po -n jmx-monitor-<User_ID>
+$ oc get po
 NAME                                   READY   STATUS    RESTARTS   AGE
 prometheus-operator-7cf7d5f74b-r4qmd   1/1     Running   0          16m
 ```
