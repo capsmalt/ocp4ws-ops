@@ -175,6 +175,8 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
     ![](images/ocp4-console-project-openshift-console-status-prometheus-add-2.png)  
 
     以下図のように折れ線グラフが描画され，下部にはリクエストが一覧されています。カーソルをグラフなどに合わせて詳細情報を確認してみましょう。  
+    
+    >もしうまく描画されない場合は，検索クエリが正しく指定されているか("apiserver_request_count")を確認してみましょう。
 
     ![](images/ocp4-console-project-openshift-console-status-prometheus-add-3.png)  
 
@@ -195,17 +197,20 @@ Nodeの状態について確認してみましょう。
 
 1. [Compute] > [Nodes] を選択します。
 
-    ![](images/ocp4-compute-nodes.png)
+    ![](images/ocp4-lab1-2-node.png)
 
-    デフォルトでは [Compact]タブが選択されており，例えば `
-ip-10-0-134-224.ap-northeast-1.compute.internal` のような名称で，計6台のNodeが一覧されています。また，MACHINE欄を見ると，`
-group00-ocp4ws-basic-b9qqj-worker-ap-northeast-1a-t6rgd` や `group00-ocp4ws-basic-b9qqj-master-0` のようにMaster/Workerの文字列が確認できます。
+    `ip-10-0-135-67.ap-southeast-1.compute.internal` のような名称で，計6台のNodeが一覧されています。また，MACHINE欄を見ると，`cluster-tokyo-38e2-ktkv6-worker-ap-southeast-1a-lx6rn` や `cluster-tokyo-38e2-ktkv6-master-0` のようにMaster/Workerの文字列が確認できます。※Node数や名称は一例です。
 
-1. [Compute] > [Nodes] > [Expand] を選択して詳細情報を一覧表示します。(上図の状態から [Expand]タブを選択できます)
+1. 任意のWorkerを選択して詳細を確認します。
 
-    ![](images/ocp4-compute-nodes-expand.png)
+    ![](images/ocp4-lab1-2-node-confirm.png)
     
-    例えば，上記のNodeのラベル(紫色のテキスト)をyaml表記すると以下のようになります。後ほどNode設定のyamlを確認しますので，その際に確認してみましょう。
+    [Overview]タブでは，選択した単一のNodeのCPUやメモリなどのリソース利用状況が確認できます。  
+    プロジェクトと同様に，OpenShift4にデフォルト構成されているPrometheusが各メトリクスを抽出しています。
+    
+    ![](images/ocp4-lab1-2-node-confirm-detail.png)
+
+    Nodeのラベル(紫色のテキスト)をyaml表記すると以下のようになります。
 
     >```
     >labels:
@@ -220,49 +225,40 @@ group00-ocp4ws-basic-b9qqj-worker-ap-northeast-1a-t6rgd` や `group00-ocp4ws-bas
     > 
     >```
 
-1. 任意のWorkerを選択して詳細を確認します。
-
-    ![](images/ocp4-compute-nodes-expand-worker.png)
+    [YAML]タブでは，OpenShift4上で管理されるNode情報をyaml形式で確認できます。Node名やアノテーション，ラベルなどの記載があります。
     
-    [Overview]タブでは，選択した単一のNodeのCPUやメモリなどのリソース利用状況が確認できます。  
-    プロジェクトと同様に，OpenShift4にデフォルト構成されているPrometheusが各メトリクスを抽出しています。
-    
-    ![](images/ocp4-compute-nodes-worker_overview.png)
-
-    [YAML]タブでは，OpenShift4上で管理されるNode情報をyaml形式で確認できます。Node名やアノテーション，さきほど確認したラベルなどの記載があります。
-    
-    ![](images/ocp4-compute-nodes-worker_yaml_rect.png)
+    ![](images/ocp4-lab1-2-node-confirm-detail-yaml.png)
     
     [Pods]タブでは，指定したNode上で動作するPod一覧を確認できます。  
     例えば，`openshift-monitoringネームスペース`に属する grafanaのPodや，alertManagerなどが動作していることが分かります。
     
-    ![](images/ocp4-compute-nodes-worker_pod.png)
+    ![](images/ocp4-lab1-2-node-confirm-detail-pod.png)
     
     [Events]タブでは，Nodeに起こったイベントについて時系列に表示されます。現時点では何も起こっていないので出力はありませんが，Nodeのステータスが変わったり，例えば割当リソースが変わったりなどの変化が起こると出力されます。
     
 1. Nodeに対する操作(Action)を以下図のようにメニューを開いて確認します。
     
-    ![](images/ocp4-compute-nodes-worker_action.png)  
+    ![](images/ocp4-lab1-2-node-confirm-action.png)  
 
     ラベルの追加や削除などの変更をUI上で簡易的に行えます。  
     今回は編集しないので，**[Cancel]** を選択してクローズします。  
 
-    ![](images/ocp4-compute-nodes-edit-label.png)  
+    ![](images/ocp4-lab1-2-node-confirm-action-label.png)  
 
     アノテーションの追加や削除などの変更をUI上で簡易的に行えます。  
     今回は編集しないので，**[Cancel]** を選択してクローズします。  
 
-    ![](images/ocp4-compute-nodes-edit-annotation.png)  
+    ![](images/ocp4-lab1-2-node-confirm-action-annotation.png)  
 
     Node構成について，yamlを直接編集して変更が行えます。  
     今回は編集しないので，**[Cancel]** を選択してクローズします。  
 
-    ![](images/ocp4-compute-nodes-edit-node.png)  
+    ![](images/ocp4-lab1-2-node-confirm-action-node.png)  
     
     [Mark as Unschedulable] を選択することで，今後新しいPodが該当Nodeにスケジューリングされないように設定できます。  
     今回は編集しないので，**[Cancel]** を選択してクローズします。  
 
-    ![](images/ocp4-compute-nodes-unschedulable.png)  
+    ![](images/ocp4-lab1-2-node-confirm-action-unschedulable.png)  
 
 コンソール上で，OpenShift4クラスターを構成するNodeの数や種類，付与されたラベル，リソース利用状況，あるNode上で動作中のPod，Nodeの構成変更，などについて確認しました。
 
