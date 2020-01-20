@@ -45,11 +45,13 @@ S2I(Source-to-Image)というツールを使って以下の2つのコンポー�
 ### 3-3-1. プロジェクト(Namespace)の作成
 OpenShift4コンソールで各自のプロジェクトを作成しましょう。  
 
-1. [Home] > [Projects] > [Create Project] を選択します。  
+1. コンソールを Developer Console に切り替えます。
+
+    ![](images/ocp4-lab1-3-developer-console.png)
+
+1. [</> Developer] > [+Add] > [Project: プルダウンメニューを選択] > [Create Project] を選択します。  
 
     ![](images/ocp4-lab1-3-create-project.png)
-
-    >コンソール右上のユーザー名が自身の<User_ID>であることを確認しましょう
 
 1. プロジェクト名(例: `blog-user00` )を指定し，**Create** を選択します。  
     
@@ -62,12 +64,14 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
     >
     >OpenShift4ではプロジェクトを作成することで，新規Namespace(=プロジェクト名)が生成されます。NamespaceはK8sクラスターを論理的に分離させることが可能なK8sリソースの一種です。例えば，アプリA用のNamespaceを`ns_appa`，アプリB用のNamespaceを`ns_appb`のように作成することで，同一のK8sクラスター内に存在するns_appaとns_appbが干渉しないように構成することも可能です。
 
-    ![](images/ocp4-lab1-3-create-project-result.png)
-
 ### 3-3-2. カタログでソースを指定してビルド&デプロイ
-1. [</> Developer] > [+Add] > [From Catalog] > [Python] テンプレート を選択します。
+1. [</> Developer] > [+Add] > [From Catalog] を選択します。
 
-    ![](images/ocp4-lab1-3-devcatalog-python.png)
+    ![](images/ocp4-lab1-3-from-catalog.png)
+
+1. 次に [Python] テンプレート を選択します。
+
+    ![](images/ocp4-lab1-3-from-catalog-python.png)
 
     >Tips:
     >
@@ -83,10 +87,10 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
     >- Route
     >    - クラスター外にワークロードを公開
 
-2. アプリケーションのリポジトリなどを指定して，OpenShift4上にアプリケーションをデプロイします。
+1. アプリケーションのリポジトリなどを指定して，OpenShift4上にアプリケーションをデプロイします。
 
     最初に，**[Create Application]**　を選択します。  
-    ![](images/ocp4-lab1-3-devcatalog-python-create.png)
+    ![](images/ocp4-lab1-3-from-catalog-python-create.png)
     
     次に，**[リポジトリなどいくつかの項目]** を指定し，最後に **[Create]** を選択します。  
 
@@ -97,26 +101,25 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
     - Name:`任意の名前(例: blog-user00)`
     - Create route: `チェックを外す`
 
-    ![](images/ocp4-lab1-3-devcatalog-python-create-repo1.png)
-    ![](images/ocp4-lab1-3-devcatalog-python-create-repo2.png)
+    ![](images/ocp4-lab1-3-from-catalog-python-create-detail.png)
     
     以上の手順で，blogアプリケーションをOpenShift4上にデプロイできました。  
     
     >Tips:
     >
-    >[</> Developer] > [Topology] から、アプリケーションのアイコンをクリックすると、稼働状態を確認できます。
+    >[</> Developer] > [Topology] から、アプリケーションのアイコンをクリックすると、稼働状態を確認できます。"Running" のステータスを確認できるまで少し待ちます。
     >
-    >![](images/ocp4-lab1-3-blog-pods-status-1of1.png)  
+    >![](images/ocp4-lab1-3-topology.png)  
     >
     
 ### 3-3-3. blogアプリケーションの状態を確認
 1. [</> Developer] > [Topology] -> [アプリケーションのアイコン] から、Pod名のリンクをクリックします。
 
-    ![](images/ocp4-lab1-3-blog-pods.png)
+    ![](images/ocp4-lab1-3-topology-pod.png)
 
     コンテナが作成され，起動していると以下のように表示されます。  
     
-    ![](images/ocp4-lab1-3-blog-pods-status.png)
+    ![](images/ocp4-lab1-3-topology-pod-detail.png)
 
     >Tips:  
     >
@@ -125,23 +128,27 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
     >さらに，Pod内のコンテナ内でコマンド実行も行えます。  
     >以下図のように [Terminal] を選択するとブラウザ上でターミナル内操作が行なえます。  
     >
-    >![](images/ocp4-lab1-3-blog-pods-terminal.png)
+    >![](images/ocp4-lab1-3-topology-pod-terminal.png)
     >
     >Pod内に複数コンテナが存在する場合はプルダウンメニューで選択するだけでコンテナを切替えてターミナル操作が可能です。問題判別を行う際には，手間を省いてくれる意外と嬉しい機能です。
 
 ### 3-3-4. 外部からアクセスするための Route を作成
 現在のblogアプリケーションは，OpenShift4クラスター内に閉じた状態ですので，外部からアクセスできるように Router を作成しましょう。  
 
+1. コンソールを Administation Console に切り替えます。
+
+    ![](images/ocp4-lab1-3-create-route-admin-console.png)
+
 1. [Networking] > [Routes] > [Create Route] を選択します。
 
-    ![](images/ocp4-lab1-3-blog-create-route.png)
+    ![](images/ocp4-lab1-3-create-route.png)
 
 1. **Router**，対象アプリ用の**Service**，**Port** を指定します。
     - Name: `任意の名前 (例: blog-user00)`
     - Service: `指定済のアプリ名 (例: blog-user00`
     - Target Port: `8080 → 8080(TCP)`
     
-    ![](images/ocp4-lab1-3-blog-create-route-2.png)
+    ![](images/ocp4-lab1-3-create-route-detail.png)
     
     >Tips:
     >
@@ -158,21 +165,21 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
     >
     >作成したRouteを参照する場合は，[Networking] > [Routes] > [Router名] のように辿ることで確認できます。 
     >
-    >![](images/ocp4-lab1-3-blog-route-detail.png)
+    >![](images/ocp4-lab1-3-create-route-result.png)
     
 ### 3-3-5. アプリケーションの動作確認
 1. [Networking] > [Routes] を選択し，blog用のRouter(例: `blog-user00`)行にある **Location欄のリンク** を開きます。
     例) `http://blog-user00-blog-user00.apps.group00-ocp4ws-basic.capsmalt.org`
 
-    ![](images/ocp4-lab1-3-blog-confirm-app.png)
+    ![](images/ocp4-lab1-3-create-route-confirm.png)
 
 1. blogアプリのサンプルページに自身のPod名が表示されていることを確認します。
 
-    ![](images/ocp4-lab1-3-blog-confirm-app-result.png)
+    ![](images/ocp4-lab1-3-create-route-confirm-result.png)
     
     Pod名が分からない場合は，[Workloads] > [Pods] のPod一覧から確認しましょう。  
     
-    ![](images/ocp4-lab1-3-blog-confirm-app-pod.png)
+    ![](images/ocp4-lab1-3-create-route-confirm-result-pod.png)
 
 
 ## 3-4. [Trial works] - OpenShift4クラスターに他アプリケーションをデプロイ
