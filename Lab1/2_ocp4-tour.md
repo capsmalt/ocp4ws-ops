@@ -103,9 +103,11 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
 > - 他の人と重複しないプロジェクトを作成すること
 > - 作成したプロジェクト以外に触れる際は，参照系操作のみとすること
 
-1. [Home] > [Projects] > [Create Project] を選択します。  
+1. [Administrator] > [Home] > [Projects] > [Create Project] を選択します。  
 
     ![](images/ocp4-console-create-project-1.png)
+    
+    ![](images/ocp4-console-create-project-1-2.png)    
 
     >コンソール右上のユーザー名が自身の<User_ID>であることを確認しましょう
 
@@ -122,9 +124,9 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
 
 **注意:**  
 **プロジェクト確認については参照系のみです。変更は行わないようにしてください。複数人でクラスターを共用しているため，変更を加えてしまうと他の方の作業に影響が出てしまいます。**  
+>**20200828: 本日は参加者毎に異なるクラスターを使用しているため，他の方への影響はありません。** 
 
-
-1. [Home] > [Projects] > [自身のプロジェクト (例: user00-lab1-2) ] を選択します。
+1. [Administrator] > [Home] > [Projects] > [自身のプロジェクト (例: user00-lab1-2) ] を選択します。
 
     ![](images/ocp4-console-project.png)
 
@@ -132,7 +134,7 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
 
     ![](images/ocp4-console-project-status.png)
 
-1. 次に，[Home] > [Projects] > [openshift-console] を選択します。
+1. 次に，[Administrator] > [Home] > [Projects] > [openshift-console] を選択します。
 
     ![](images/ocp4-console-project-openshift-console.png)
 
@@ -147,6 +149,11 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
 
     ![](images/ocp4-console-project-openshift-console-status-next.png)
 
+    CPU利用量を示したグラフが表示されているはずです。OpenShiftのUIに組み込まれたPrometheusを使用しています。  
+    次に，[Prometheus UI] を選択して，Prometheusに直接アクセスしてみましょう。  
+
+    ![](images/ocp4-console-project-openshift-console-status-prometheus.png)
+
     ログインを求められた場合は，OpenShift4クラスターへのログイン情報を使用します。  
 
     ![](images/ocp4-console-project-openshift-console-status-login.png)
@@ -158,7 +165,7 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
 
     openshift-consoleプロジェクト(=openshift-consoleネームスペース)内のコンテナCPU利用量のグラフが描画されました。
 
-    ![](images/ocp4-console-project-openshift-console-status-prometheus.png)
+    ![](images/ocp4-console-project-openshift-console-status-prometheus-cpu-usage.png)
 
     >折れ線グラフにカーソルを合わせると詳細情報が表示されます。
     >Prometheusに対して，以下のQueryを投げることで上図の情報を抽出しています。
@@ -166,66 +173,57 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
 
 1. 任意のメトリクスを指定して描画してみます。
 
-    [- insert metric at cursol -] を選択します。  
+    入力済のクエリを削除してブランクにしてから，[- insert metric at cursol -] を選択します。  
 
     ![](images/ocp4-console-project-openshift-console-status-prometheus-add-1.png)
 
-    例では，[apiserver_request_count] > Execute にように選択します。  
+    例では，[controller_runtime_reconcile_total] > Execute を選択します。  
 
     ![](images/ocp4-console-project-openshift-console-status-prometheus-add-2.png)  
 
     以下図のように折れ線グラフが描画され，下部にはリクエストが一覧されています。カーソルをグラフなどに合わせて詳細情報を確認してみましょう。  
     
-    >もしうまく描画されない場合は，検索クエリが正しく指定されているか("apiserver_request_count")を確認してみましょう。
+    >もしうまく描画されない場合は，検索クエリが正しく指定されているか("controller_runtime_reconcile_total")を確認してみましょう。
 
     ![](images/ocp4-console-project-openshift-console-status-prometheus-add-3.png)  
 
-1. 自動で開かれたタブ(Prometheus-Grafanaの可視化)は，**モニタリングやロギングなど短期間で更新のある可視化画面であるため多量のリソースを消費**します。このため，必ずクローズしておきましょう。
+    >OpenShift4では，各プロジェクト(ネームスペース)に属するあらゆるリソースのメトリクスを初期状態で取得できるようになっています。PrometheusやGrafanaなどを使うことでモニタリングおよび描画を実現しています。
+    
+    [Administrator] > [Monitoring] > [Dashboards]で Grafana UIの確認も可能です。
 
-OpenShift4では，各プロジェクト(ネームスペース)に属するあらゆるリソースのメトリクスを初期状態で取得できるようになっています。PrometheusやGrafanaなどを使うことでモニタリングおよび描画を実現しています。
+    ![](images/ocp4-console-project-openshift-console-monitoring.png)
+    
+1. 現在開いているタブ（Prometheus UI (あるいはGrafana)の可視化）は，**モニタリングやロギングなど短期間で更新のある可視化画面であるため，ブラウザに負荷がかかります。**このため，必ずクローズしておきましょう。
+    
+
 
 ### 2-3-2. クラスターを構成するNodeの確認
 OpenShift4クラスターはIPIでデフォルト構成でインストールされた場合，Master3台/Worker3台の計6台のNode群で構成されます。  
 Nodeの状態について確認してみましょう。
 
->**※今回は，Workerを6台に増強しています。このため，OpenShift4クラスターは9台のEC2で構成されています。**
+>**※ノード台数や構成は変更できます。ハンズオン実施時は6台構成ではない場合もあります。**
 
 **注意:**  
 **・Node確認については参照系のみ**  
 **・変更は行わないこと**  
 **・複数人でクラスターを共用しているため，変更を加えてしまうと他の方の作業に影響が出ます**  
 
-1. [Compute] > [Nodes] を選択します。
+1. [Administrator] > [Compute] > [Nodes] を選択します。
 
     ![](images/ocp4-lab1-2-node.png)
 
-    `ip-10-0-135-67.ap-southeast-1.compute.internal` のような名称で，計6台のNodeが一覧されています。また，MACHINE欄を見ると，`cluster-tokyo-38e2-ktkv6-worker-ap-southeast-1a-lx6rn` や `cluster-tokyo-38e2-ktkv6-master-0` のようにMaster/Workerの文字列が確認できます。※Node数や名称は一例です。
-
 1. 任意のWorkerを選択して詳細を確認します。
 
-    ![](images/ocp4-lab1-2-node-confirm.png)
+    >`ip-10-0-139-202.ap-southeast-1.compute.internal` のような名称で，Node群が一覧されています。また，Role欄を見ると `master`/`worker`の割当を確認できます。※Node数や名称は一例です。
+
+    ![](images/ocp4-lab1-2-node-worker.png)
     
     [Overview]タブでは，選択した単一のNodeのCPUやメモリなどのリソース利用状況が確認できます。  
     プロジェクトと同様に，OpenShift4にデフォルト構成されているPrometheusが各メトリクスを抽出しています。
     
-    ![](images/ocp4-lab1-2-node-confirm-detail.png)
+    ![](images/ocp4-lab1-2-node-worker-detail.png)
 
-    Nodeのラベル(紫色のテキスト)をyaml表記すると以下のようになります。
-
-    >```
-    >labels:
-    >  beta.kubernetes.io/os: linux
-    >  failure-domain.beta.kubernetes.io/zone: ap-northeast-1a
-    >  node-role.kubernetes.io/worker: ''
-    >  failure-domain.beta.kubernetes.io/region: ap-northeast-1
-    >  node.openshift.io/os_id: rhcos
-    >  beta.kubernetes.io/instance-type: m4.large
-    >  kubernetes.io/hostname: ip-10-0-134-224
-    >  beta.kubernetes.io/arch: amd64
-    > 
-    >```
-
-    [YAML]タブでは，OpenShift4上で管理されるNode情報をyaml形式で確認できます。Node名やアノテーション，ラベルなどの記載があります。
+    [YAML]タブでは，OpenShift4上で管理されるNode情報をyaml形式で確認できます。ノード名やアノテーション，ラベルなどの記載があります。
     
     ![](images/ocp4-lab1-2-node-confirm-detail-yaml.png)
     
@@ -274,9 +272,9 @@ ocコマンドを使用して，K8sワークロードの動作状況を確認し
 
     ```
     $ oc get project
-
-    NAME                                                    DISPLAY NAME   STATUS
+    NAME                                               DISPLAY NAME        STATUS
     default                                                                Active
+    kube-node-lease                                                        Active
     kube-public                                                            Active
     kube-system                                                            Active
     openshift                                                              Active
@@ -292,6 +290,7 @@ ocコマンドを使用して，K8sワークロードの動作状況を確認し
     openshift-cluster-version                                              Active
     openshift-config                                                       Active
     openshift-config-managed                                               Active
+    openshift-config-operator                                              Active
     openshift-console                                                      Active
     openshift-console-operator                                             Active
     openshift-controller-manager                                           Active
@@ -299,16 +298,21 @@ ocコマンドを使用して，K8sワークロードの動作状況を確認し
     openshift-dns                                                          Active
     openshift-dns-operator                                                 Active
     openshift-etcd                                                         Active
+    openshift-etcd-operator                                                Active
     openshift-image-registry                                               Active
     openshift-infra                                                        Active
     openshift-ingress                                                      Active
     openshift-ingress-operator                                             Active
+    openshift-insights                                                     Active
+    openshift-kni-infra                                                    Active
     openshift-kube-apiserver                                               Active
     openshift-kube-apiserver-operator                                      Active
     openshift-kube-controller-manager                                      Active
     openshift-kube-controller-manager-operator                             Active
     openshift-kube-scheduler                                               Active
     openshift-kube-scheduler-operator                                      Active
+    openshift-kube-storage-version-migrator                                Active
+    openshift-kube-storage-version-migrator-operator                       Active
     openshift-machine-api                                                  Active
     openshift-machine-config-operator                                      Active
     openshift-marketplace                                                  Active
@@ -316,13 +320,17 @@ ocコマンドを使用して，K8sワークロードの動作状況を確認し
     openshift-multus                                                       Active
     openshift-network-operator                                             Active
     openshift-node                                                         Active
+    openshift-openstack-infra                                              Active
     openshift-operator-lifecycle-manager                                   Active
     openshift-operators                                                    Active
+    openshift-ovirt-infra                                                  Active
     openshift-sdn                                                          Active
     openshift-service-ca                                                   Active
     openshift-service-ca-operator                                          Active
-    openshift-service-catalog-apiserver-operator                           Active
-    openshift-service-catalog-controller-manager-operator                  Active
+    openshift-service-catalog-removed                                      Active
+    openshift-user-workload-monitoring                                     Active
+    openshift-vsphere-infra                                                Active
+    terminal                                           Workshop Terminal   Active
     user00-lab1-2                                                          Active
     ```
 
@@ -347,7 +355,7 @@ ocコマンドを使用して，K8sワークロードの動作状況を確認し
     >```
 
     >Tips:
-    >` $ oc project` でプロジェクトしておくことで，`-n user00-lab1-2` のようにネームスペース指定をする必要が無くなるため幾分便利になります。  
+    >` $ oc project` でプロジェクト（ネームスペース）を指定しておくことで，`-n user00-lab1-2` のようにコマンド実行時に毎度ネームスペース指定をする必要が無くなるため幾分便利になります。  
     > ※ただし，本ハンズオンの実行例においては，`$ oc project <プロジェクト名>` の実行有無に関係無く `-n` オプションを付与しています。  
 
 1. 自身のプロジェクト内のワークロードを確認します。
