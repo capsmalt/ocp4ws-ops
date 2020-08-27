@@ -83,7 +83,7 @@ ocコマンドを使用して，クラスターにログインします。
 
     OpenShift4のログイン情報を使用してJenkinsのUIにログインします。
     
-    ![](images/jenkins_login_1.png)
+    ![](images/ocp4-lab2-2-jenkins-login.png)
     
     **自身のプロジェクト名** を選択します。(例: jenkins-user00)
     
