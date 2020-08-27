@@ -13,7 +13,6 @@
 ### Lab1: [コンテナイメージのビルド&デプロイ](Lab1)
 ### Lab2: [Jenkinsベースのビルドパイプラインの使用](Lab2)
 ### Lab3: [アプリケーション と Operator 連携](Lab3)
-### (Option) Lab4: [Operator導入 と CLI活用](Lab4)
 
 # ハンズオン環境
 本ハンズオンは，Kubernetesクラスター(OpenShift4)の動作環境としてAWSを使用します。今回は構築済です。  
