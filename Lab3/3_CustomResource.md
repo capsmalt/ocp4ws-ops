@@ -84,15 +84,18 @@ spec:
         name: alertmanager-main
         port: web
 ```
+
+![](images/create-prometheus-yaml.png "Create Prometheus")
+
 「Kind: Prometheus」を設定すると、Prometheus Operatorが「replicas: 2」の数の分Prometheusに必要なContainerを起動します。    
 起動したPromethuesPodを確認しておきましょう。
 
 ```
 $ oc get pod -n jmx-monitor-<User_ID>
-NAME                                   READY   STATUS    RESTARTS   AGE
-prometheus-monitoring-0                3/3     Running   1          92s
-prometheus-monitoring-1                3/3     Running   1          92s
-prometheus-operator-6bc46fd4b8-vwn5j   1/1     Running   0          3h11m
+NAME                                  READY   STATUS    RESTARTS   AGE
+prometheus-monitoring-0               3/3     Running   1          51s
+prometheus-monitoring-1               3/3     Running   1          51s
+prometheus-operator-bd98985fd-vcnw6   1/1     Running   0          17m
 ```
 
 ### 3-1-2. PrometheusのGUIを確認
@@ -109,12 +112,14 @@ route.route.openshift.io/prometheus-operated exposed
 
 
 $ oc get route -n jmx-monitor-<User_ID>
-NAME                  HOST/PORT                                                   PATH   SERVICES              PORT   TERMINATION   WILDCARD
-prometheus-operated   prometheus-operated-jmx-monitor.apps.ocp4ws-00.k8show.net          prometheus-operated   web                  None
+NAME                  HOST/PORT                                                                           PATH   SERVICES              PORT   TERMINATION   WILDCARD
+prometheus-operated   prometheus-operated-jmx-monitor-user11.apps.cluster-cc8c.cc8c.example.opentlc.com          prometheus-operated   web                  None
 ```
 
-Routerが接続できたら、ブラウザより確認を行ってください。(例では、http://prometheus-operated-jmx-monitor.apps.ocp4ws-00.k8show.net)   
+Routerが接続できたら、ブラウザより確認を行ってください。(例では、prometheus-operated-jmx-monitor-user11.apps.cluster-cc8c.cc8c.example.opentlc.com)   
 なお、この時点では何も監視登録設定されていないため、PrometheusのGUIに接続できるものの[Status]>[Targets]には何も監視対象が表示されません。   
+
+![](images/prometheus-route.png)
 
 ![NoTargets](images/non-target-prometheus.jpg "NoTargets")
 
@@ -178,7 +183,7 @@ spec:
 「Kind: ServiceMonitor」を設定すると、Prometheus Operatorが同一ラベルのPrometheus(k8s-app: prometheus)に対して、ExporterのService(app: jboss-eap-prometheus)から監視対象を特定します。    
 PrometheusのGUI(例では、http://prometheus-operated-jmx-monitor.apps.ocp4ws-00.k8show.net) の[Status]>[Targets]から、対象が表示されることを確認してみましょう。ただし、Prometheusの設定が読み込まれ、出力表示が切り替わるまでに少し時間がかかります。    
 
-![Prometheus Target](images/target-prometheus.jpg "Prometheus Target")
+![Prometheus Target](images/target-prometheus.png "Prometheus Target")
 
 Targetが正しく表示でき、StateがUP状態であれば、JMXの値も確認できます。[Graph]>[-insert metric at cursor-]から、「jvm_memory_bytes_used」などを確認してみましょう。   
 [Graph]のタブを押すと、可視化された値が表示できます。
