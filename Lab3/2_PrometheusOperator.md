@@ -38,9 +38,11 @@ Using project "jmx-monitor-<User_ID>" on server "https://<OpenShift API>".
 ![OperatorHub](images/operator-hub.png "operator-hub")
 
 OperatorHubの中から、Prometheus Operator(Community)を選択して、[Install]を行う。        
-※コミュニティ版を利用すると、警告が表示されるので、一旦[Continue]で続ける。(OCP 4.2現在)    
+※コミュニティ版を利用すると、警告が表示されるので、一旦[Continue]で続ける。(OCP 4.5現在)    
      
-![Prometheus Operator](images/prometheus-operator.jpg "prometheus-operator")
+![Prometheus Operator](images/prometheus-operator.png "prometheus-operator")
+
+![](images/prometheus-operator-subscription.png)
 
 Subscriptionは、以下の設定で作成する。  
 * Installation Mode  
@@ -59,11 +61,13 @@ Automatic
 
 実際にGUI上では以下のように設定します。
    
-<img src="images/create-subscription.png" width="900x900">
+![](images/create-subscription.png)
 
 正しくSubscriptionが設定されると、[UPGRADE STATUS]がInstalledになりOperatorが展開されます。また、以下のように[Operators]>[Installed Operators]>[Operator Details]>[Subscription]から、Subscriptionの概要が確認できます。
 
 ![Prometheus Subscription](images/prometheus-subscription.png "prometheus-subscription")
+
+![](images/create-subscription-overview.png)
 
 これで、Prometheus OperatorのSubscriptionが作成されました。なおこの時点では、CRDの登録やPrometheus Operatorの配置が行われるだけで、Prometheusのプロセス自体は構築されません。
 
@@ -73,11 +77,12 @@ Prometheus OperatorのSubscriptionを作成すると、CRD(Custom Resource Defin
 
 ```
 $ oc get crd |grep monitoring.coreos.com
-alertmanagers.monitoring.coreos.com                         2019-12-17T20:27:02Z
-podmonitors.monitoring.coreos.com                           2019-12-17T20:27:02Z
-prometheuses.monitoring.coreos.com                          2019-12-17T20:27:02Z
-prometheusrules.monitoring.coreos.com                       2019-12-17T20:27:03Z
-servicemonitors.monitoring.coreos.com                       2019-12-17T20:27:02Z
+alertmanagers.monitoring.coreos.com                         2020-08-27T01:38:39Z
+podmonitors.monitoring.coreos.com                           2020-08-27T01:38:39Z
+prometheuses.monitoring.coreos.com                          2020-08-27T01:38:39Z
+prometheusrules.monitoring.coreos.com                       2020-08-27T01:38:39Z
+servicemonitors.monitoring.coreos.com                       2020-08-27T01:38:39Z
+thanosrulers.monitoring.coreos.com                          2020-08-27T01:38:39Z
 ```
 
 Promethus Operatorは、標準で5つのCRDを保持している。  
@@ -89,8 +94,8 @@ GUIからは [Operators]>[Installed Operators]>[Prometheus Operator] を確認�
 
 ```
 $ oc get po
-NAME                                   READY   STATUS    RESTARTS   AGE
-prometheus-operator-7cf7d5f74b-r4qmd   1/1     Running   0          16m
+NAME                                  READY   STATUS    RESTARTS   AGE
+prometheus-operator-bd98985fd-vcnw6   1/1     Running   0          5m52s
 ```
 
 以上で、Promethus Operatorの準備が整いました。次の[CustomResourceの設定](3_CustomResource.md)作業に進む   
