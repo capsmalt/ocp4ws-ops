@@ -33,22 +33,21 @@
 ### 2-2-1. ocコマンドによるログイン(oc login)
 1. 踏み台サーバー(Bastion Server)にSSHでログインします。
     ```
-    $ ssh -i <Private_Key> <Bastion_User_ID>@<Bastion_Server_IP>
-  
-    y
+    $ ssh <Bastion_User_ID>@<Bastion_Server_Hostname>
     ```
 
-    >**※注意: ワークショップ参加者の方は，必ず自身に割当てられた <Bastion_User_ID>，<Bastion_Servier_IP>，<Private_Key> を使用してください。**  
+    >**※注意: ワークショップ参加者の方は，必ず自身に割当てられた <Bastion_User_ID>, <Bastion_Servier_IP>，<Password> を使用してください。**  
     >
     >
     >例) 「踏み台サーバー(Bastion Server)」のSSHログイン情報
-    > - `<Bastion_User_ID>`: **user00**
-    > - `<Bastion_Server_IP>`: **1.2.3.4**
-    > - `<Private_Key>`: **bs-key.pem**
+    > - `<Bastion_User_ID>`: **lab-user**
+    > - `<Bastion_Server_IP>`: **bastion.tokyo-XXXX.sandboxYYYY.opentlc.com**
+    > - `<Password>`: **r3dh4t1!**
     >
     >実行例) 
     >```
-    >$ ssh -i bs-key.pem user00@1.2.3.4
+    >$ ssh lab-user@bastion.tokyo-XXXX.sandboxYYYY.opentlc.com
+    >lab-user@bastion.tokyo-004e.sandbox104.opentlc.com's password: r3dh4t1!(表示されません)
     >```
 
 1. OpenShift4クラスターにocコマンドでログインします。
@@ -64,15 +63,15 @@
     >
     >
     >例) 「OpenShift_API」へのログイン情報
-    > - `<OpenShift_API>`: **https://api.group00-ocp4ws-basic.capsmalt.org:6443**
-    > - `<User_ID>`: **user00**
-    > - `<User_PW>`: **openshift**
+    > - `<OpenShift_API>`: **https://api.cluster-tokyo-XXXX.tokyo-XXXX.sandboxYYYY.opentlc.com:6443**
+    > - `<User_ID>`: **kubeadmin**
+    > - `<User_PW>`: **XXXXX-XXXXX-XXXXX-XXXXX**
     >
     >実行例) 
     >```
-    >$ oc login https://api.group00-ocp4ws-basic.capsmalt.org:6443  
-    >Username: user00
-    >Password: openshift
+    >$ oc login https://api.cluster-tokyo-XXXX.tokyo-XXXX.sandboxYYYY.opentlc.com:6443
+    >Username: kubeadmin
+    >Password: XXXXX-XXXXX-XXXXX-XXXXX(表示されません)
     >```
 
 ### 2-2-2. ブラウザからOpenShift4コンソールへのログイン
@@ -80,20 +79,15 @@
 
 >**注意: ワークショップ参加者の方は，必ず自身に割当てられた <OpenShift_Console>，<User_ID>，<User_PW> を使用してください。**  
 >例) 「OpenShift4コンソール」のログイン情報
-> - `<OpenShift_Console>`: **https://console-openshift-console.apps.group00-ocp4ws-basic.capsmalt.org**
-> - capsmalt's group を選択
-> - `<User_ID>`: **user00**
-> - `<User_PW>`: **openshift**
+> - `<OpenShift_Console>`: **https://console-openshift-console.apps.cluster-tokyo-XXXX.tokyo-XXXX.sandboxYYYY.opentlc.com**
+> - `<User_ID>`: **kubeadmin**
+> - `<User_PW>`: **XXXXX-XXXXX-XXXXX-XXXXX**
 
 Privacy Errorが出た場合は，[Advanced] > [Proceed to oauth-openshift.apps.group00-ocp4ws-basic.capsmalt.org (unsafe)] のように選択して進めてください。
 
 ![](images/ocp4-console-login-error.png)
 
-[capsmalt's group] を選択し，ログイン情報を入力してコンソールにログインします。
-
-![](images/ocp4-console-login-group.png)
-
-![](images/ocp4-console-login-user-pw.png)
+ログイン情報を入力してコンソールにログインします。
 
 ## 2-3. OpenShift4クラスターの動作確認
 コンソールやocコマンドでクラスターの状態について確認しましょう。ただし基本的には**参照系のみ(oc get pod, oc describe deploy, oc logs xxx, etc.)を使用**します。
@@ -121,10 +115,6 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
 ### 2-3-1. プロジェクトのリソース利用状況の確認
 最初に，前の手順で作成した自身のプロジェクトを確認してみましょう。  
 その後，他ユーザーとの共有プロジェクトである `openshift-consoleプロジェクト` のリソース利用状況を確認します。
-
-**注意:**  
-**プロジェクト確認については参照系のみです。変更は行わないようにしてください。複数人でクラスターを共用しているため，変更を加えてしまうと他の方の作業に影響が出てしまいます。**  
->**20200828: 本日は参加者毎に異なるクラスターを使用しているため，他の方への影響はありません。** 
 
 1. [Administrator] > [Home] > [Projects] > [自身のプロジェクト (例: user00-lab1-2) ] を選択します。
 
@@ -206,7 +196,6 @@ Nodeの状態について確認してみましょう。
 **注意:**  
 **・Node確認については参照系のみ**  
 **・変更は行わないこと**  
-**・複数人でクラスターを共用しているため，変更を加えてしまうと他の方の作業に影響が出ます**  
 
 1. [Administrator] > [Compute] > [Nodes] を選択します。
 
