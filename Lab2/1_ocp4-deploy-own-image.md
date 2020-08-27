@@ -33,7 +33,7 @@ Lab2の最初のステップでは，**既にコンテナイメージ化済** �
 ### 1-2-1. プロジェクト(Namespace)の作成
 OpenShift4コンソールで各自のプロジェクトを作成しましょう。  
 
-1. [Home] > [Projects] > [Create Project] を選択します。  
+1. [</> Developer] > [+Add] > [Project: プルダウンメニューを選択] > [Create Project] を選択します。  
 
     ![](images/ocp4-lab2-1-create-project.png)
 
@@ -50,17 +50,20 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
     ![](images/ocp4-lab2-1-create_application_using_existedImage.png)
 
 2. **Image Name** を指定します。
-    - Image Name: `quay.io/openshiftlabs/workshop-terminal:2.4.0`
+    - Image Name from external registry: `quay.io/openshiftlabs/workshop-terminal:2.4.0`
+    - Applicaiton Name:`任意の名前(例: workshop-terminal-app)`
+    - Name:`任意の名前(例: workshop-terminal)`
+    - Create route: `チェックを入れる`
 
     ![](images/ocp4-lab2-1-create_application_using_existedImage-2.png)
 
-3. **検索ボタン** をクリックし，Application Name(workshop-terminal-app)とName(workshop-terminal)を確認して，**Create** を選択します。
+    Application Name(workshop-terminal-app)とName(workshop-terminal)を確認して，**Create** を選択します。
 
-    ![](images/ocp4-lab2-1-create_application_using_existedImage-3.png)
-    ![](images/ocp4-lab2-1-create_application_using_existedImage-4.png)
 
 ## 1-3. アプリケーションの動作確認
-1. [</> Developer] > [Topology] -> [アプリケーションのアイコン] から、 **Open URL** を実行します。
+1. [</> Developer] > [Topology] -> [アプリケーションのアイコン] から、 **Open URL** を選択します。
+
+    >コンテナのデプロイに少し時間がかかります。（約30秒）PodがRunningになるのをお待ちください。
 
     ![](images/ocp4-lab2-1-workshop-terminal-confirm-app.png)
 
@@ -87,4 +90,4 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
 
 ---
 以上で，既存のコンテナイメージのデプロイは完了です。  
-次に [Jenkinsベースのビルドパイプラインの利用](https://github.com/capsmalt/ocp4ws-basic/blob/master/Lab2/2_ocp4-jenkins-pipeline.md) のハンズオンに進みます。
+次に [Jenkinsベースのビルドパイプラインの利用](https://github.com/capsmalt/ocp4ws-ops/blob/master/Lab2/2_ocp4-jenkins-pipeline.md) のハンズオンに進みます。
