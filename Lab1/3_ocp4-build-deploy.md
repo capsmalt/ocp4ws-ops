@@ -53,10 +53,7 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
 
     ![](images/ocp4-lab1-3-create-project.png)
 
-1. プロジェクト名(例: `blog-user00` )を指定し，**Create** を選択します。  
-    
-    プロジェクト名には，**必ずご自身のログイン時のユーザー名 (例: "blog-user00")** を指定してください。  
-    複数人でクラスターを共有しているため，他の人と重複しないプロジェクト名を指定する必要があります。  
+1. プロジェクト名(例: `blog` )を指定し，**Create** を選択します。  
 
     ![](images/ocp4-lab1-3-create-project-blog.png)
 
@@ -96,8 +93,8 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
 
     - Builder Image Version: `3.6`
     - Git Repo URL: `https://github.com/openshift-katacoda/blog-django-py` 
-    - Applicaiton Name:`任意の名前(例: blog-user00)`
-    - Name:`任意の名前(例: blog-user00)`
+    - Applicaiton Name:`任意の名前(例: blog)`
+    - Name:`任意の名前(例: blog)`
     - Create route: `チェックを外す`
 
     ![](images/ocp4-lab1-3-from-catalog-python-create-detail.png)
@@ -143,8 +140,8 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
     ![](images/ocp4-lab1-3-create-route.png)
 
 1. **Router**，対象アプリ用の**Service**，**Port** を指定します。
-    - Name: `任意の名前 (例: blog-user00)`
-    - Service: `指定済のアプリ名 (例: blog-user00`
+    - Name: `任意の名前 (例: blog)`
+    - Service: `指定済のアプリ名 (例: blog`
     - Target Port: `8080 → 8080(TCP)`
     
     ![](images/ocp4-lab1-3-create-route-detail.png)
@@ -169,8 +166,8 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
     >![](images/ocp4-lab1-3-create-route-result.png)
     
 ### 3-3-5. アプリケーションの動作確認
-1. [Networking] > [Routes] を選択し，blog用のRouter(例: `blog-user00`)行にある **Location欄のリンク** を開きます。
-    例) `http://blog-user00-blog-user00.apps.cluster-391b.391b.example.opentlc.com/`
+1. [Networking] > [Routes] を選択し，blog用のRouter(例: `blog`)行にある **Location欄のリンク** を開きます。
+    例) `http://blog-blog.apps.cluster-391b.391b.example.opentlc.com/`
 
     ![](images/ocp4-lab1-3-create-route-confirm.png)
 
@@ -191,7 +188,7 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
 コンテンツ:
 
 
-- Project名(NameSpace): `trial-<yourID>` (例: `trial-user00`)
+- Project名(NameSpace): `trial` (例: `trial`)
 - BaseImage(BuilderImage): `Python 3.6`
 - Git Repository: `https://github.com/sclorg/django-ex`
 - Routes名: `trial-<yourID>` 

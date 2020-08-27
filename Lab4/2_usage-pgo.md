@@ -54,13 +54,12 @@ $ mkdir $PGOROOT/my-pgo-client
 pgo実行時に使用するapiserverのURL(`PGO_APISERVER_URL`)を確認します。
 
 ```
-$ oc get svc -n pgo-<User_ID>
+$ oc get svc -n pgo
 
 NAME                             TYPE           CLUSTER-IP       EXTERNAL-IP                                                                    PORT(S)                                         AGE
 postgres-operator                LoadBalancer   172.30.114.68    a6615bd17b98011e992ee0e4cddef59e-1242048699.ap-northeast-1.elb.amazonaws.com   8443:32455/TCP                                  130m
 ```
 
->※注意: ワークショップ参加者の方は，必ず自身に割当てられた <User_ID> を使用し，`-n pgo-<User_ID>` のように指定してください。  
 
 上記の実行例の結果の場合，`postgres-operator の EXTERNAL-IP` 欄 を確認して，以下の `PGO_APISERVER_URL` に指定します。
 その際，`https://` と `:8443` を忘れずに付与しましょう。
@@ -84,28 +83,26 @@ pgo実行時に使用するクレデンシャルをOperator Podのapiserverか�
 まず，Operator Pod名を確認しましょう。
 
 ```
-$ oc get po -n pgo-<User_ID>
+$ oc get po -n pgo
 
 NAME                                 READY   STATUS    RESTARTS   AGE
 postgres-operator-74c4fbf46c-r7llt   3/3     Running   0          135m
 ```
-
->※注意: ワークショップ参加者の方は，必ず自身に割当てられた <User_ID> を使用し，`-n pgo-<User_ID>` のように指定してください。  
 
 上記の実行例の結果の場合，`postgres-operator-74c4fbf46c-r7llt` がPod名です。 
 
 確認したPod名をコピーして以下の形式で指定します。
 
 ```
-$ oc cp pgo-<User_ID>/<Pod名>:/tmp/server.key $PGOROOT/my-pgo-client/server.key -c apiserver
-$ oc cp pgo-<User_ID>/<Pod名>:/tmp/server.crt $PGOROOT/my-pgo-client/server.crt -c apiserver
+$ oc cp pgo/<Pod名>:/tmp/server.key $PGOROOT/my-pgo-client/server.key -c apiserver
+$ oc cp pgo/<Pod名>:/tmp/server.crt $PGOROOT/my-pgo-client/server.crt -c apiserver
 ```
 
 >実行例)
 >
 >```
->$ oc cp pgo-user18/postgres-operator-74c4fbf46c-r7llt:/tmp/server.key $PGOROOT/my-pgo-client/server.key -c apiserver
->$ oc cp pgo-user18/postgres-operator-74c4fbf46c-r7llt:/tmp/server.crt $PGOROOT/my-pgo-client/server.crt -c apiserver
+>$ oc cp pgo/postgres-operator-74c4fbf46c-r7llt:/tmp/server.key $PGOROOT/my-pgo-client/server.key -c apiserver
+>$ oc cp pgo/postgres-operator-74c4fbf46c-r7llt:/tmp/server.crt $PGOROOT/my-pgo-client/server.crt -c apiserver
 >```
 
 >Tips:  
@@ -160,12 +157,12 @@ source $HOME/.bashrc
 ```
 $ cat $HOME/.bashrc
 ...
-export PGOROOT=/home/user18/postgres-operator
+export PGOROOT=/home/lab-user/postgres-operator
 export PGO_APISERVER_URL=https://af6626834cd8011e9a4e90a9978ec148-1958014071.ap-northeast-1.elb.amazonaws.com:8443
-export PGO_CA_CERT=/home/user18/postgres-operator/my-pgo-client/server.crt
-export PGO_CLIENT_CERT=/home/user18/postgres-operator/my-pgo-client/server.crt
-export PGO_CLIENT_KEY=/home/user18/postgres-operator/my-pgo-client/server.key
-export PGOUSER=/home/user18/postgres-operator/my-pgo-client/pgouser
+export PGO_CA_CERT=/home/lab-user/postgres-operator/my-pgo-client/server.crt
+export PGO_CLIENT_CERT=/home/lab-user/postgres-operator/my-pgo-client/server.crt
+export PGO_CLIENT_KEY=/home/lab-user/postgres-operator/my-pgo-client/server.key
+export PGOUSER=/home/lab-user/postgres-operator/my-pgo-client/pgouser
 ...
 ```
 
@@ -202,14 +199,14 @@ pgoから様々なリソースを制御してみましょう。
 PostgreSQLクラスターを作成します。
 
 ```
-pgo create cluster mycluster -n pgo-<User_ID>
-pgo show cluster mycluster -n pgo-<User_ID>
+pgo create cluster mycluster -n pgo
+pgo show cluster mycluster -n pgo
 ```
 
 Pgclusterリソースを確認します。
 
 ```
-oc get Pgclusters -n pgo-<User_ID>
+oc get Pgclusters -n pgo
 
 NAME        AGE
 mycluster   17m
@@ -218,7 +215,7 @@ mycluster   17m
 Postgres関連のPodを確認します。
 
 ```
-oc get pods -n pgo-<User_ID>
+oc get pods -n pgo
     mycluster-6c5b4ddc6-qq5zg                         1/1     Running     0          5m13s
     mycluster-backrest-shared-repo-668554dc6c-mvbjg   1/1     Running     0          5m13s
     mycluster-stanza-create-bh6lf                     0/1     Completed   0          4m6s
@@ -228,7 +225,7 @@ oc get pods -n pgo-<User_ID>
 Postgresの動作を確認します。
 
 ```
-pgo test mycluster -n pgo-<User_ID>
+pgo test mycluster -n pgo
 
     cluster : mycluster
 	    psql -p 5432 -h 172.30.254.147 -U postgres postgres is Working
@@ -242,7 +239,7 @@ pgo test mycluster -n pgo-<User_ID>
 Serviceを確認します。
 
 ```
-oc get svc -n pgo-<User_ID>
+oc get svc -n pgo
 
 NAME                             TYPE           CLUSTER-IP       EXTERNAL-IP                                                                   PORT(S)                                         AGE
 mycluster                        ClusterIP      172.30.254.147   <none>                                                                        5432/TCP,9100/TCP,10000/TCP,2022/TCP,9187/TCP   7m49s
@@ -254,7 +251,7 @@ postgres-operator                LoadBalancer   172.30.77.27     a8a59cbf2b73d11
 PgreplicasリソースでPodを追加します。
 
 ```
-pgo scale mycluster -n pgo-<User_ID>
+pgo scale mycluster -n pgo
 
 WARNING: Are you sure? (yes/no): yes
 created Pgreplica mycluster-hrbx
@@ -263,7 +260,7 @@ created Pgreplica mycluster-hrbx
 Pgreplicasリソースを確認します。
 
 ```
-oc get Pgreplicas -n pgo-<User_ID>
+oc get Pgreplicas -n pgo
 
 NAME             AGE
 mycluster-hrbx   8m45s
@@ -272,7 +269,7 @@ mycluster-hrbx   8m45s
 PostgresのReplica Podを確認します。
 
 ```
-oc get pods -n pgo-<User_ID>
+oc get pods -n pgo
 NAME                                              READY   STATUS      RESTARTS   AGE
 mycluster-6c5b4ddc6-qq5zg                         1/1     Running     0          10m
 mycluster-backrest-shared-repo-668554dc6c-mvbjg   1/1     Running     0          10m
@@ -286,13 +283,13 @@ postgres-operator-9777dbc48-59kms                 3/3     Running     0         
 Postgresのバックアップを確認します。
 
 ```
-pgo backup mycluster -n pgo-<User_ID>
+pgo backup mycluster -n pgo
 
 created Pgtask backrest-backup-mycluster
 ```
 
 ```
-oc get Pgtask -n pgo-<User_ID>
+oc get Pgtask -n pgo
 
 NAME                        AGE
 backrest-backup-mycluster   9s
@@ -301,14 +298,14 @@ mycluster-stanza-create     52m
 ```
 
 ```
-pgo backup mycluster --backup-type=pgbasebackup -n pgo-<User_ID>
+pgo backup mycluster --backup-type=pgbasebackup -n pgo
 
 created backup Job for mycluster
 workflow id 2176b3ad-9666-41bd-91df-081f911493f0
 ```
 
 ```
-oc get Pgtask -n pgo-<User_ID>
+oc get Pgtask -n pgo
 
 NAME                        AGE
 backrest-backup-mycluster   91s
@@ -318,7 +315,7 @@ mycluster-stanza-create     53m
 ```
 
 ```
-oc get pods -n pgo-<User_ID>
+oc get pods -n pgo
 
 NAME                                              READY   STATUS              RESTARTS   AGE
 backrest-backup-mycluster-6mmcg                   0/1     Completed           0          103s
@@ -331,7 +328,7 @@ postgres-operator-9777dbc48-59kms                 3/3     Running             0 
 ```
 
 ```
-oc get pods -n pgo-<User_ID>
+oc get pods -n pgo
 
 NAME                                              READY   STATUS      RESTARTS   AGE
 backrest-backup-mycluster-6mmcg                   0/1     Completed   0          2m21s
@@ -346,13 +343,13 @@ postgres-operator-9777dbc48-59kms                 3/3     Running     0         
 ログを確認します。
 
 ```
-pgo ls mycluster -n pgo-<User_ID> /pgdata/mycluster/pg_log
+pgo ls mycluster -n pgo /pgdata/mycluster/pg_log
 
 total 60K
 -rw-------. 1 postgres root 53K Aug  5 05:28 postgresql-Mon.log
 
 
-pgo cat mycluster -n pgo-<User_ID> /pgdata/mycluster/pg_log/postgresql-Mon.log | tail -3
+pgo cat mycluster -n pgo /pgdata/mycluster/pg_log/postgresql-Mon.log | tail -3
 
 2019-08-05 05:29:38 UTC [1022]: [3-1] user=postgres,db=postgres,app=psql,client=[local]LOG:  duration: 0.279 ms
 2019-08-05 05:29:38 UTC [1022]: [4-1] user=postgres,db=postgres,app=psql,client=[local]LOG:  disconnection: session time: 0:00:00.002 user=postgres database=postgres host=[local]
@@ -361,7 +358,7 @@ pgo cat mycluster -n pgo-<User_ID> /pgdata/mycluster/pg_log/postgresql-Mon.log |
 PVCに対するPostgresの利用状況を確認します。
 
 ```
-pgo df mycluster -n pgo-<User_ID>
+pgo df mycluster -n pgo
 
 POD                       STATUS    PGSIZE    CAPACITY  PCTUSED
 

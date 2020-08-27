@@ -26,28 +26,24 @@ S2I: pom.xml に Dependency をセットし、S2I 実行時に Maven でビル�
 ### 1-2-1. OpenShift4へのログイン  
 1. 踏み台サーバー(Bastion Server)にSSHでログインします。
     ```
-    $ ssh -i <Private_Key> <Bastion_User_ID>@<Bastion_Server_IP>
-  
-    y
+    $ ssh <Bastion_User_ID>@<Bastion_Server_Hostname>
     ```
 
-    >**※注意: ワークショップ参加者の方は，必ず自身に割当てられた <Bastion_User_ID>，<Bastion_Servier_IP>，<Private_Key> を使用してください。**  
+    >**※注意: ワークショップ参加者の方は，必ず自身に割当てられた <Bastion_User_ID>, <Bastion_Servier_IP>，<Password> を使用してください。**  
     >
     >
     >例) 「踏み台サーバー(Bastion Server)」のSSHログイン情報
-    > - `<Bastion_User_ID>`: **user18**
-    > - `<Bastion_Server_IP>`: **1.2.3.4**
-    > - `<Private_Key>`: **bs-key.pem**
+    > - `<Bastion_User_ID>`: **lab-user**
+    > - `<Bastion_Server_IP>`: **bastion.tokyo-XXXX.sandboxYYYY.opentlc.com**
+    > - `<Password>`: **r3dh4t1!**
     >
     >実行例) 
     >```
-    >$ ssh -i bs-key.pem user18@1.2.3.4
+    >$ ssh lab-user@bastion.tokyo-XXXX.sandboxYYYY.opentlc.com
+    >lab-user@bastion.tokyo-004e.sandbox104.opentlc.com's password: r3dh4t1!(パスワードは表示されません)
     >```
 
-1. OpenShift4クラスターにocコマンドでログインします。
-
-    OpenShift APIのドメインをもとに，コマンドからOpenShiftにログインを行います。  
-    ここではノードを確認することで，接続の可否を確認します。  
+2. OpenShift4クラスターにocコマンドでログインします。
 
     ```
     $ oc login <OpenShift_API>
@@ -60,20 +56,18 @@ S2I: pom.xml に Dependency をセットし、S2I 実行時に Maven でビル�
     >
     >
     >例) 「OpenShift_API」へのログイン情報
-    > - `<OpenShift_API>`: **https://api.group9.capsmalt.org:6443**
-    > - `<User_ID>`: **user18**
-    > - `<User_PW>`: **ocppass**
+    > - `<OpenShift_API>`: **https://api.cluster-tokyo-XXXX.tokyo-XXXX.sandboxYYYY.opentlc.com:6443**
+    > - `<User_ID>`: **kubeadmin**
+    > - `<User_PW>`: **XXXXX-XXXXX-XXXXX-XXXXX**
     >
     >実行例) 
     >```
-    >$ oc login https://api.group9.capsmalt.org:6443  
-    >Username: user18
-    >Password: ocppass
-    >```
-    >
-    > 上記は，Group番号が **"9"** ，User番号が **"18"** の方のログイン例です。    
+    >$ oc login https://api.cluster-tokyo-XXXX.tokyo-XXXX.sandboxYYYY.opentlc.com:6443
+    >Username: kubeadmin
+    >Password: XXXXX-XXXXX-XXXXX-XXXXX(パスワードは表示されません)
+    >```   
 
-    次に，OpenShift4クラスターを構成するノードを確認します。  
+3. 次に，OpenShift4クラスターを構成するノードを確認します。  
        
     ```
     $ oc get node  
@@ -91,28 +85,25 @@ S2I: pom.xml に Dependency をセットし、S2I 実行時に Maven でビル�
     >なお，ハンズオン環境においては，ノード台数が異なる場合があります。
 
 ### 1-2-2. アプリケーションビルド  
-1. 監視対象アプリケーション用の「jmx-<User_ID>」という名前のプロジェクトを作ります。
+1. 監視対象アプリケーション用の「jmx」という名前のプロジェクトを作ります。
 
     ```
-    $ oc new-project jmx-<User_ID>
+    $ oc new-project jmx
     $ oc project
-    Using project "jmx-<User_ID>" on server "https://<OpenShift API>".
+    Using project "jmx" on server "https://<OpenShift API>".
     ```
-
-    >**※注意: ワークショップ参加者の方は，必ず自身に割当てられた <User_ID> を使用してください。**  
     >
     >
     >実行例)
     >
     >```
-    >$ oc new-project jmx-user18 
-    >$ oc get project | grep jmx-user18
+    >$ oc new-project jmx 
+    >$ oc get project | grep jmx
     >
-    >jmx-user18        Active
+    >jmx               Active
     >```
     >
-    >上記のように，自身の `User_ID`を使用したプロジェクト名が出力されることを確認します。  
-    >(例では `jmx-user18`)
+    >上記のように，作成したプロジェクト名が出力されることを確認します。
 
 
 1. アプリケーションをリポジトリからCloneして，「jboss-eap-prometheus」イメージをビルドします。
@@ -143,8 +134,8 @@ S2I: pom.xml に Dependency をセットし、S2I 実行時に Maven でビル�
     
     $ oc get imagestream
     NAME                   IMAGE REPOSITORY                                                                   TAGS     UPDATED
-    eap70-openshift        image-registry.openshift-image-registry.svc:5000/jmx-<User_ID>/eap70-openshift        latest   37 minutes ago
-    jboss-eap-prometheus   image-registry.openshift-image-registry.svc:5000/jmx-<User_ID>/jboss-eap-prometheus   latest   36 minutes ago
+    eap70-openshift        image-registry.openshift-image-registry.svc:5000/jmx/eap70-openshift        latest   37 minutes ago
+    jboss-eap-prometheus   image-registry.openshift-image-registry.svc:5000/jmx/jboss-eap-prometheus   latest   36 minutes ago
     ```
 
     OpenShift4コンソールにログインして，[Builds]>[Image Streams]から，ビルドしたイメージがImageStreamに登録されていることも確認しましょう。
@@ -166,7 +157,7 @@ S2I: pom.xml に Dependency をセットし、S2I 実行時に Maven でビル�
 
     上記を `\` で改行しながら1コマンドとして実行します。
     
-    --> Found image 55806df (About a minute old) in image stream "jmx-<User_ID>/jboss-eap-prometheus" under tag "latest" for "jboss-eap-prometheus:latest"
+    --> Found image 55806df (About a minute old) in image stream "jmx/jboss-eap-prometheus" under tag "latest" for "jboss-eap-prometheus:latest"
     …
     --> Success
         Application is not exposed. You can expose services to the outside world by executing one or more of the commands below:

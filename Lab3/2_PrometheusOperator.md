@@ -15,10 +15,10 @@ Prometheus Operatorは次の機能を提供します。
 ### 2-1-2. 事前準備
 
 * 事前にJMX Exporterを用意しておく。
-* 「OpenShift Portal」のアドレス  
-例: http://console.openshiftworkshop.com  
+* 「OpenShift Webコンソール」のアドレス  
+例: https://console-openshift-console.apps.cluster-tokyo-XXXX.tokyo-XXXX.sandboxYYYY.opentlc.com
 * 「Openshift API」のアドレス <OpenShift API>  
-例: https://api.cluster.openshiftworkshop.com:6443  
+例: https://api.cluster-tokyo-XXXX.tokyo-XXXX.sandboxYYYY.opentlc.com:6443
 * OpenShiftの(system:admin)ログイン情報
 
 ## 2-2. Prometheus Operatorの展開
@@ -26,14 +26,14 @@ Prometheus Operatorは次の機能を提供します。
 Prometheus Operator用のプロジェクトを作成する。
 
 ```
-$ oc new-project jmx-monitor-<User_ID>
+$ oc new-project jmx-monitor
 $ oc project
-Using project "jmx-monitor-<User_ID>" on server "https://<OpenShift API>".
+Using project "jmx-monitor" on server "https://<OpenShift API>".
 ```
 
 ### 2-2-2. Subscriptionを作成  
-ブラウザからOpenShift Portalにログインし、[Operators]>[OperatorHub]からPrometheusを検索する。   
-この際、プロジェクトが「jmx-monitor-<User_ID>」であることを確認しておく。   
+ブラウザからOpenShift Webコンソールにログインし、[Operators]>[OperatorHub]からPrometheusを検索する。   
+この際、プロジェクトが「jmx-monitor」であることを確認しておく。   
           
 ![OperatorHub](images/operator-hub.png "operator-hub")
 
@@ -46,7 +46,7 @@ OperatorHubの中から、Prometheus Operator(Community)を選択して、[Insta
 
 Subscriptionは、以下の設定で作成する。  
 * Installation Mode  
-A specific namespace on the cluster: [PR] jmx-monitor-<User_ID>  
+A specific namespace on the cluster: [PR] jmx-monitor
 * Update Channel  
 beta  
 * Approval Strategy  

@@ -37,11 +37,8 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
 
     ![](images/ocp4-lab2-1-create-project.png)
 
-1. プロジェクト名(例: `workshop-terminal-user00` )を指定し，**Create** を選択します。  
+1. プロジェクト名(例: `workshop-terminal` )を指定し，**Create** を選択します。  
     
-    プロジェクト名には，**必ずご自身のログイン時のユーザー名 (例: "workshop-terminal-user00")** を指定してください。  
-    複数人でクラスターを共有しているため，他の人と重複しないプロジェクト名を指定する必要があります。  
-
     ![](images/ocp4-lab2-1-create-project-workshop-terminal.png)
 
 ### 1-2-2. 既存コンテナイメージのデプロイ と Routerの作成
@@ -79,7 +76,7 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
 ヒント:
 
 
-- プロジェクト名(既存): `workshop-terminal-<yourID>` (例: `workshop-terminal-user00`)
+- プロジェクト名(既存): `workshop-terminal` (例: `workshop-terminal`)
 - ContainerImage(新規): `quay.io/openshiftlabs/workshop-terminal:2.10.2`
 - アプリ名(新規): `workshop-terminal-2102`
 - Service名(アプリ名と同じ名前で自動生成): `workshop-terminal-2102`

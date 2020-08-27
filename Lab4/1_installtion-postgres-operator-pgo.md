@@ -24,25 +24,24 @@ Postgres Operatorを展開することで，以下の機能をK8sクラスター
 ### 1-2-1. ocコマンドによるログイン(oc login)
 1. 踏み台サーバー(Bastion Server)にSSHでログインします。
     ```
-    $ ssh -i <Private_Key> <Bastion_User_ID>@<Bastion_Server_IP>
-  
-    y
+    $ ssh <Bastion_User_ID>@<Bastion_Server_Hostname>
     ```
 
-    >**※注意: ワークショップ参加者の方は，必ず自身に割当てられた <Bastion_User_ID>，<Bastion_Servier_IP>，<Private_Key> を使用してください。**  
+    >**※注意: ワークショップ参加者の方は，必ず自身に割当てられた <Bastion_User_ID>, <Bastion_Servier_IP>，<Password> を使用してください。**  
     >
     >
     >例) 「踏み台サーバー(Bastion Server)」のSSHログイン情報
-    > - `<Bastion_User_ID>`: **user18**
-    > - `<Bastion_Server_IP>`: **1.2.3.4**
-    > - `<Private_Key>`: **bs-key.pem**
+    > - `<Bastion_User_ID>`: **lab-user**
+    > - `<Bastion_Server_IP>`: **bastion.tokyo-XXXX.sandboxYYYY.opentlc.com**
+    > - `<Password>`: **r3dh4t1!**
     >
     >実行例) 
     >```
-    >$ ssh -i bs-key.pem user18@1.2.3.4
+    >$ ssh lab-user@bastion.tokyo-XXXX.sandboxYYYY.opentlc.com
+    >lab-user@bastion.tokyo-004e.sandbox104.opentlc.com's password: r3dh4t1!(パスワードは表示されません)
     >```
 
-1. OpenShift4クラスターにocコマンドでログインします。
+2. OpenShift4クラスターにocコマンドでログインします。
 
     ```
     $ oc login <OpenShift_API>
@@ -55,18 +54,16 @@ Postgres Operatorを展開することで，以下の機能をK8sクラスター
     >
     >
     >例) 「OpenShift_API」へのログイン情報
-    > - `<OpenShift_API>`: **https://api.group9.capsmalt.org:6443**
-    > - `<User_ID>`: **user18**
-    > - `<User_PW>`: **ocppass**
+    > - `<OpenShift_API>`: **https://api.cluster-tokyo-XXXX.tokyo-XXXX.sandboxYYYY.opentlc.com:6443**
+    > - `<User_ID>`: **kubeadmin**
+    > - `<User_PW>`: **XXXXX-XXXXX-XXXXX-XXXXX**
     >
     >実行例) 
     >```
-    >$ oc login https://api.group9.capsmalt.org:6443  
-    >Username: user18
-    >Password: ocppass
-    >```
-    >
-    > 上記は，Group番号が **"9"** ，User番号が **"18"** の方のログイン例です。    
+    >$ oc login https://api.cluster-tokyo-XXXX.tokyo-XXXX.sandboxYYYY.opentlc.com:6443
+    >Username: kubeadmin
+    >Password: XXXXX-XXXXX-XXXXX-XXXXX(パスワードは表示されません)
+    >```       
 
 ### 1-2-2. GitHubからプロジェクトをクローン
 GitHubから Postgres-Operatorプロジェクトをクローンします。  
@@ -95,7 +92,7 @@ $ export PGOROOT=$HOME/postgres-operator
 $ cd $PGOROOT
 $ pwd
 
-/home/<User_ID>/postgres-operator
+/home/lab-user/postgres-operator
 ```
 
 上記のように出力されていればOKです。
@@ -118,46 +115,42 @@ source $HOME/.bashrc
 Postgres Operatorを動作させるプロジェクトを作成します。
 
 ```
-$ oc new-project pgo-<User_ID> 
-$ oc get project | grep pgo-<User_ID>
+$ oc new-project pgo 
+$ oc get project | grep pgo
 ```
 
->**※注意: ワークショップ参加者の方は，必ず自身に割当てられた <User_ID> を使用してください。**  
 >
 >
 >実行例)
 >
 >```
->$ oc new-project pgo-user18 
->$ oc get project | grep pgo-user18
+>$ oc new-project pgo-
+>$ oc get project | grep pgo
 >
->pgo-user18        Active
+>pgo               Active
 >```
 >
->上記のように，自身の `User_ID`を使用したプロジェクト名が出力されることを確認します。  
->(例では `pgo-user18`)
+>上記のように，作成したプロジェクト名が出力されることを確認します。  
 
 
 ### 1-3-2. Secretを作成します。
 Postgresクラスターのバックアップ作成に必要なSecret (`pgo-backrest-repo-config`)を作成します。  
 
 ```
-$ oc create secret generic -n pgo-<User_ID> pgo-backrest-repo-config \
+$ oc create secret generic -n pgo pgo-backrest-repo-config \
   --from-file=config=$PGOROOT/conf/pgo-backrest-repo/config \
   --from-file=sshd_config=$PGOROOT/conf/pgo-backrest-repo/sshd_config \
   --from-file=aws-s3-credentials.yaml=$PGOROOT/conf/pgo-backrest-repo/aws-s3-credentials.yaml \
   --from-file=aws-s3-ca.crt=$PGOROOT/conf/pgo-backrest-repo/aws-s3-ca.crt
   
 上記のようにバックスラッシュ (**"\"**) を入れることで改行し，多数のオプションを付与してコマンド実行しています。
-```
-
->**※注意: ワークショップ参加者の方は，必ず自身に割当てられた <User_ID> を使用して，Namespaceオプションで `-n pgo-user18` のように指定してください。**  
+```  
 >
 >
 >実行例)
 >
 >```
->$ oc create secret generic -n pgo-user18 pgo-backrest-repo-config \
+>$ oc create secret generic -n pgo pgo-backrest-repo-config \
 >  --from-file=config=$PGOROOT/conf/pgo-backrest-repo/config \
 >  --from-file=sshd_config=$PGOROOT/conf/pgo-backrest-repo/sshd_config \
 >  --from-file=aws-s3-credentials.yaml=$PGOROOT/conf/pgo-backrest-repo/aws-s3-credentials.yaml \
@@ -173,7 +166,7 @@ $ oc create secret generic -n pgo-<User_ID> pgo-backrest-repo-config \
 >作成したSecret (`pgo-backrest-repo-config`) が存在するか確認してみましょう。
 >
 >```
->$ oc get secret -n pgo-user18
+>$ oc get secret -n pgo
 >
 >NAME                       TYPE                                  DATA   AGE
 >builder-dockercfg-zslcx    kubernetes.io/dockercfg               1      54s
@@ -191,27 +184,19 @@ $ oc create secret generic -n pgo-<User_ID> pgo-backrest-repo-config \
 
 ## 1-4. Operatorをインストール
 ### 1-4-1. ブラウザからOpenShift4コンソールにログイン
-OpenShift4コンソールにログインします。
-
 ブラウザ(Chrome or Firefox)からOpenShift4のコンソールにログインします。
 
 >**注意: ワークショップ参加者の方は，必ず自身に割当てられた <OpenShift_Console>，<User_ID>，<User_PW> を使用してください。**  
->
 >例) 「OpenShift4コンソール」のログイン情報
-> - `<OpenShift_Console>`: **https://console-openshift-console.apps.group9.capsmalt.org**
-> - capsmalt's group を選択
-> - `<User_ID>`: **user18**
-> - `<User_PW>`: **ocppass**
+> - `<OpenShift_Console>`: **https://console-openshift-console.apps.cluster-tokyo-XXXX.tokyo-XXXX.sandboxYYYY.opentlc.com**
+> - `<User_ID>`: **kubeadmin**
+> - `<User_PW>`: **XXXXX-XXXXX-XXXXX-XXXXX**
 
-Privacy Errorが出た場合は，[Advanced] > [Proceed to oauth-openshift.apps.group9.capsmalt.org (unsafe)] のように選択して進めてください。
+Privacy Errorが出た場合は，[Advanced] > [Proceed to ......] のように選択して進めてください。
 
-![](images/ocp4-i-lab2-1-console-login-error.png)
+![](images/ocp4-console-login-error.png)
 
-[capsmalt's group] を選択し，ログイン情報を入力してコンソールにログインします。
-
-![](images/ocp4-i-lab2-1-console-login-group.png)
-
-![](images/ocp4-i-lab2-1-console-login-user-pw.png)
+ログイン情報を入力してコンソールにログインします。
 
 ### 1-4-2. OperatorHubからPostgres Operatorをインストール
 OperatorHubから，Postgres Operator ("Crunchy PostgresSQL Enterprise")をインストールします。  
@@ -219,8 +204,6 @@ OperatorHubから，Postgres Operator ("Crunchy PostgresSQL Enterprise")をイ�
 [Catalog]>[OperatorHub]から，[Crunchy PostgreSQL Enterprise (Community)]を開きます。
 
 ![](images/ocp4-i-lab2-1-Catalog-OperatorHub-Postgres-focus.png)
-
->**注意: 必ず自身のプロジェクト(`pgo-<User_ID>`)が選択されていることを確認してください。**
 
 [Continue]を選択します。
 
@@ -233,7 +216,7 @@ OperatorHubから，Postgres Operator ("Crunchy PostgresSQL Enterprise")をイ�
 Operator Subscriptionを作成します。  
 
 - Installation Mode: `A specific namespace on cluster` (デフォルト)
-- Namespace: `pgo-<User_ID>` (自身のプロジェクト名を選択)
+- Namespace: `pgo` (自身のプロジェクト名を選択)
 - Update Channel: `alpha` (デフォルト)
 - Approval Strategy: `Manual` 
 
@@ -275,9 +258,9 @@ Operator Subscriptionを作成します。
 >
 > `oc`コマンドで確認
 > ```
-> $ oc get deployment -n pgo-<User_ID>
-> $ oc get pod -n pgo-<User_ID>
-> $ oc get secret -n pgo-<User_ID>
+> $ oc get deployment -n pgo
+> $ oc get pod -n pgo
+> $ oc get secret -n pgo
 
 ## 1-5. Postgres Operatorのインストール確認
 ### 1-5-1. Postgres CRDを確認
@@ -310,31 +293,31 @@ Postgres OperatorのDeploymentは1つのPodを管理しています。Podには3
 ocコマンドで確認します。
 
 ```
-$ oc get deploy -n pgo-<User_ID>
-$ oc describe deploy postgres-operator -n pgo-<User_ID>
+$ oc get deploy -n pgo
+$ oc describe deploy postgres-operator -n pgo
 ```
 
 >実行例)
 >
 >```
->$ oc get deploy -n pgo-user18
+>$ oc get deploy -n pgo
 >
 >NAME                READY   UP-TO-DATE   AVAILABLE   AGE
 >postgres-operator   1/1     1            1           25m
 >
 >
->$ oc describe deploy postgres-operator -n pgo-user18
+>$ oc describe deploy postgres-operator -n pgo
 >(出力結果は表示していません)
 >```
 
 ```
-$ oc get po -n pgo-<User_ID>
+$ oc get po -n pgo
 ```
 
 >実行例)
 >
 >```
->$ oc get po -n pgo-user18
+>$ oc get po -n pgo
 >
 >NAME                                 READY   STATUS    RESTARTS   AGE
 >postgres-operator-74c4fbf46c-r7llt   3/3     Running   0          33m
@@ -360,8 +343,8 @@ Operator PodをService(type:LoadBanancer)を使用して公開します。
 今回は `oc expose` コマンドを使用します。
 
 ```
-$ oc expose deployment -n pgo-<User_ID> postgres-operator --type=LoadBalancer
-$ oc get svc -n pgo-<User_ID>
+$ oc expose deployment -n pgo postgres-operator --type=LoadBalancer
+$ oc get svc -n pgo
 
 NAME                             TYPE           CLUSTER-IP       EXTERNAL-IP                                                                    PORT(S)                                         AGE
 postgres-operator                LoadBalancer   172.30.114.68    a6615bd17b98011e992ee0e4cddef59e-1242048699.ap-northeast-1.elb.amazonaws.com   8443:32455/TCP                                  130m

@@ -47,10 +47,10 @@
     >実行例) 
     >```
     >$ ssh lab-user@bastion.tokyo-XXXX.sandboxYYYY.opentlc.com
-    >lab-user@bastion.tokyo-004e.sandbox104.opentlc.com's password: r3dh4t1!(表示されません)
+    >lab-user@bastion.tokyo-004e.sandbox104.opentlc.com's password: r3dh4t1!(パスワードは表示されません)
     >```
 
-1. OpenShift4クラスターにocコマンドでログインします。
+2. OpenShift4クラスターにocコマンドでログインします。
 
     ```
     $ oc login <OpenShift_API>
@@ -71,7 +71,7 @@
     >```
     >$ oc login https://api.cluster-tokyo-XXXX.tokyo-XXXX.sandboxYYYY.opentlc.com:6443
     >Username: kubeadmin
-    >Password: XXXXX-XXXXX-XXXXX-XXXXX(表示されません)
+    >Password: XXXXX-XXXXX-XXXXX-XXXXX(パスワードは表示されません)
     >```
 
 ### 2-2-2. ブラウザからOpenShift4コンソールへのログイン
@@ -105,7 +105,7 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
 
     >コンソール右上のユーザー名が自身の<User_ID>であることを確認しましょう
 
-1. プロジェクト名(例: `user00-lab1-2` )を指定し，**Create** を選択します。  
+1. プロジェクト名(例: `lab1-2` )を指定し，**Create** を選択します。  
 
     ![](images/ocp4-console-create-project-2.png)
 
@@ -116,7 +116,7 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
 最初に，前の手順で作成した自身のプロジェクトを確認してみましょう。  
 その後，他ユーザーとの共有プロジェクトである `openshift-consoleプロジェクト` のリソース利用状況を確認します。
 
-1. [Administrator] > [Home] > [Projects] > [自身のプロジェクト (例: user00-lab1-2) ] を選択します。
+1. [Administrator] > [Home] > [Projects] > [自身のプロジェクト (例: lab1-2) ] を選択します。
 
     ![](images/ocp4-console-project.png)
 
@@ -320,15 +320,15 @@ ocコマンドを使用して，K8sワークロードの動作状況を確認し
     openshift-user-workload-monitoring                                     Active
     openshift-vsphere-infra                                                Active
     terminal                                           Workshop Terminal   Active
-    user00-lab1-2                                                          Active
+    lab1-2                                                          Active
     ```
 
 1. 2-3. で作成した自身のプロジェクトを検索し，操作対象として切替えます。
 
     ```
-    $ oc get project | grep user00*
+    $ oc get project | grep lab1-2
 
-    user00-lab1-2                                                          Active
+    lab1-2                                                          Active
     ```
 
     プロジェクトを切替えて操作してみましょう。
@@ -338,26 +338,26 @@ ocコマンドを使用して，K8sワークロードの動作状況を確認し
 
     >実行例)  
     >```
-    >$ oc project user00-lab1-2
+    >$ oc project lab1-2
     >
-    >Now using project "user00-lab1-2" on server "https://api.group00-ocp4ws-basic.capsmalt.org:6443".
+    >Now using project "lab1-2" on server "https://api.group00-ocp4ws-basic.capsmalt.org:6443".
     >```
 
     >Tips:
-    >` $ oc project` でプロジェクト（ネームスペース）を指定しておくことで，`-n user00-lab1-2` のようにコマンド実行時に毎度ネームスペース指定をする必要が無くなるため幾分便利になります。  
+    >` $ oc project` でプロジェクト（ネームスペース）を指定しておくことで，`-n lab1-2` のようにコマンド実行時に毎度ネームスペース指定をする必要が無くなるため幾分便利になります。  
     > ※ただし，本ハンズオンの実行例においては，`$ oc project <プロジェクト名>` の実行有無に関係無く `-n` オプションを付与しています。  
 
 1. 自身のプロジェクト内のワークロードを確認します。
     > コマンド実行時は，`-n <各自のプロジェクト名>` に読み替えてください。
 
     ```
-    $ oc get po -n user00-lab1-2
+    $ oc get po -n lab1-2
     No resources found.
 
-    $ oc get deploy -n user00-lab1-2    
+    $ oc get deploy -n lab1-2    
     No resources found.
 
-    $ oc get svc -n user00-lab1-2
+    $ oc get svc -n lab1-2
     No resources found.
     ```
 

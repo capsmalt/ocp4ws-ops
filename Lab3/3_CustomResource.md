@@ -47,8 +47,8 @@ JMX Prometheus ExporterのServiceのラベル名(図は「app=jboss-eap-promethe
 
 -------
 
-「jmx-monitor-<User_ID>」プロジェクトの[Operators]>[Intalled Operators]>[Prometheus Operator]を選択し、[Prometheus]タブの「Create Prometheus」から、以下の「Kind: Prometheus」を定義します。    
-※この際、Projectが「jmx-monitor-<User_ID>」であることを確認します。  
+「jmx-monitor」プロジェクトの[Operators]>[Intalled Operators]>[Prometheus Operator]を選択し、[Prometheus]タブの「Create Prometheus」から、以下の「Kind: Prometheus」を定義します。    
+※この際、Projectが「jmx-monitor」であることを確認します。  
 
 ![Create Prometheus](images/create-prometheus.png "Create Prometheus")
 
@@ -62,7 +62,7 @@ metadata:
   name: monitoring
   labels:
     prometheus: k8s
-  namespace: jmx-monitor-<User_ID>
+  namespace: jmx-monitor
 spec:
   replicas: 2
   version: v2.7.1
@@ -80,7 +80,7 @@ spec:
     timeout: 300s
   alerting:
     alertmanagers:
-      - namespace: jmx-monitor-<User_ID>
+      - namespace: jmx-monitor
         name: alertmanager-main
         port: web
 ```
@@ -91,7 +91,7 @@ spec:
 起動したPromethuesPodを確認しておきましょう。
 
 ```
-$ oc get pod -n jmx-monitor-<User_ID>
+$ oc get pod -n jmx-monitor
 NAME                                  READY   STATUS    RESTARTS   AGE
 prometheus-monitoring-0               3/3     Running   1          51s
 prometheus-monitoring-1               3/3     Running   1          51s
@@ -102,21 +102,21 @@ prometheus-operator-bd98985fd-vcnw6   1/1     Running   0          17m
 PrometheusのGUIを表示します。OperatorのServiceに対してRouterを接続します。
 
 ```
-$ oc get svc -n jmx-monitor-<User_ID>
+$ oc get svc -n jmx-monitor
 NAME                  TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)    AGE
 prometheus-operated   ClusterIP   None         <none>        9090/TCP   5m39s
 
 
-$ oc expose service prometheus-operated -n jmx-monitor-<User_ID>
+$ oc expose service prometheus-operated -n jmx-monitor
 route.route.openshift.io/prometheus-operated exposed
 
 
-$ oc get route -n jmx-monitor-<User_ID>
+$ oc get route -n jmx-monitor
 NAME                  HOST/PORT                                                                           PATH   SERVICES              PORT   TERMINATION   WILDCARD
-prometheus-operated   prometheus-operated-jmx-monitor-user11.apps.cluster-cc8c.cc8c.example.opentlc.com          prometheus-operated   web                  None
+prometheus-operated   prometheus-operated-jmx-monitor.apps.cluster-cc8c.cc8c.example.opentlc.com          prometheus-operated   web                  None
 ```
 
-Routerが接続できたら、ブラウザより確認を行ってください。(例では、prometheus-operated-jmx-monitor-user11.apps.cluster-cc8c.cc8c.example.opentlc.com)   
+Routerが接続できたら、ブラウザより確認を行ってください。(例では、prometheus-operated-jmx-monitor.apps.cluster-cc8c.cc8c.example.opentlc.com)   
 なお、この時点では何も監視登録設定されていないため、PrometheusのGUIに接続できるものの[Status]>[Targets]には何も監視対象が表示されません。   
 
 ![](images/prometheus-route.png)
@@ -132,10 +132,10 @@ https://docs.openshift.com/container-platform/3.11/architecture/additional_conce
 ここでは事前に、「JMX Monitor(jmx-monitor)」のPrometheus Operatorに設定したサービスアカウント(prometheus-k8s)に対して、「JMX Exporter(jmx)」プロジェクトに参照権限を付与しています。また、「JMX Exporter(jmx)」プロジェクトに対するPodネットワーク許可を追加しています。
 
 ```
-$ oc adm policy add-role-to-user view system:serviceaccount:jmx-monitor-<User_ID>:prometheus-k8s -n jmx-<User_ID>
-clusterrole.rbac.authorization.k8s.io/view added: "system:serviceaccount:jmx-monitor-<User_ID>:prometheus-k8s"
+$ oc adm policy add-role-to-user view system:serviceaccount:jmx-monitor:prometheus-k8s -n jmx
+clusterrole.rbac.authorization.k8s.io/view added: "system:serviceaccount:jmx-monitor:prometheus-k8s"
 
-$ oc adm pod-network join-projects --to=jmx-<User_ID> jmx-monitor-<User_ID>
+$ oc adm pod-network join-projects --to=jmx jmx-monitor
 using plugin: "redhat/openshift-ovs-networkpolicy", managing pod network is only supported for openshift multitenant network plugin
 ```
 
@@ -154,7 +154,7 @@ using plugin: "redhat/openshift-ovs-networkpolicy", managing pod network is only
 | sampleLimit | SampleLimit defines per-scrape limit on number of scraped samples that will be accepted. | uint64 | false |
 
 「jmx-monitor」プロジェクトの[Operators]>[Intalled Operators]>[Prometheus Operator]を選択し、[ServiceMonitor]タブの「Create ServiceMonitor」から、以下の「Kind: ServiceMonitor」を定義します。
-※この際、Projectが「jmx-monitor-<User_ID>」であることを確認します。
+※この際、Projectが「jmx-monitor」であることを確認します。
 
 ![Create ServiceMonitor](images/create-servicemonitor.png "Create ServiceMonitor")
 
@@ -163,10 +163,10 @@ using plugin: "redhat/openshift-ovs-networkpolicy", managing pod network is only
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: jmx-monitor-<User_ID>
+  name: jmx-monitor
   labels:
     k8s-app: prometheus
-  namespace: jmx-monitor-<User_ID>
+  namespace: jmx-monitor
 spec:
   endpoints:
     - interval: 60s
@@ -174,7 +174,7 @@ spec:
       scrapeTimeout: 55s
   namespaceSelector:
     matchNames:
-      - jmx-<User_ID>
+      - jmx
   selector:
     matchLabels:
       app: jboss-eap-prometheus
@@ -199,6 +199,6 @@ Targetが正しく表示でき、StateがUP状態であれば、JMXの値も確�
 以下の`oc`コマンドで2つのプロジェクトを削除しましょう。
 
 ```
-$ oc delete project jmx-<User_ID>
-$ oc delete project jmx-monitor-<User_ID>
+$ oc delete project jmx
+$ oc delete project jmx-monitor
 ```
