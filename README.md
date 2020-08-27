@@ -23,6 +23,8 @@ OpenShift4クラスターに対するCLI操作をを行う際は，クライア�
 
 ![](images/handson-env.png)
 
+**本日は，ひとり1クラスター（6台構成+踏台）の環境を使用します。**
+
 GUI操作は，クライアントPCのブラウザ(**Chrome/Firefox推奨**)を使用します。  
 
 # 前提
@@ -35,16 +37,3 @@ GUI操作は，クライアントPCのブラウザ(**Chrome/Firefox推奨**)を�
 
 # 注意事項
 OpenShift4クラスター接続情報など当日の連絡事項 (Etherpad) ==> 当日ご案内します
-
-# タイムテーブル
-Red Hat OpenShift Container Platform 4 ワークショップ
-
-|Time|Agenda|Content|
-|:---:|:---|:---|
-|13:00-13:30|受付||
-|(30min)|<講義> OpenShift4概要 と ハンズオン環境への接続|OpenShift4の特徴紹介||
-|(60min)|<ハンズオン> Lab1 <br>|OpenShift4インストール手順確認<br>ログインと動作確認<br>コンテナイメージのビルド&デプロイ|
-|(15min)|Break||
-|(30min)|<講義> OpenShift4でのアプリケーションデプロイ概要|S2I (Source to Image) <br> CI/CD|
-|(45min)|<ハンズオン> Lab2 <br>|Jenkinsベースのビルドパイプライン<br>その他コンテンツ|
-|(-17:00)|アンケート記入，QA，フリーディスカッションタイム||
