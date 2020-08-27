@@ -184,18 +184,17 @@ $ oc get svc/jboss-eap-prometheus
 NAME                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                               AGE
 jboss-eap-prometheus   ClusterIP   172.30.159.173   <none>        8080/TCP,8443/TCP,8778/TCP,9404/TCP   30s
 
-$ oc get dc/jboss-eap-prometheus
-NAME                   REVISION   DESIRED   CURRENT   TRIGGERED BY
-jboss-eap-prometheus   1          1         1         config,image(jboss-eap-prometheus:latest)
+$ oc get deploy jboss-eap-prometheus
+NAME                   READY   UP-TO-DATE   AVAILABLE   AGE
+jboss-eap-prometheus   1/1     1            1           47s   
 
 $ oc get pod
-NAME                           READY   STATUS      RESTARTS   AGE
-jboss-eap-prometheus-1-2z9zs   1/1     Running     0          4m50s
-jboss-eap-prometheus-1-deploy  0/1     Completed   0          4m59s
-jboss-eap-prometheus-1-build   0/1     Completed   0          9m19s
+NAME                                    READY   STATUS      RESTARTS   AGE
+jboss-eap-prometheus-1-build            0/1     Completed   0          6m50s
+jboss-eap-prometheus-7b78f9bc88-b98zx   1/1     Running     0          77s
 ```
 
-「jboss-eap-prometheus-1-2z9zs」(2z9zsはデプロイしたときにランダムに生成される)がRunning状態になるまで待ちましょう。
+「jboss-eap-prometheus-7b78f9bc88-b98zx」(7b78f9bc88-b98zxはデプロイしたときにランダムに生成される)がRunning状態になるまで待ちましょう。
 
 ### 1-2-4. アプリケーションのアノテーション設定
 
