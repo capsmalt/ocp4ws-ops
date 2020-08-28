@@ -191,7 +191,7 @@ OpenShift4コンソールで各自のプロジェクトを作成しましょう�
 - Project名(NameSpace): `trial` (例: `trial`)
 - BaseImage(BuilderImage): `Python 3.6`
 - Git Repository: `https://github.com/sclorg/django-ex`
-- Routes名: `trial-<yourID>` 
+- Routes名: `trial` 
 
 ---
 以上で，コンテナイメージのビルドとデプロイ は完了です。  
